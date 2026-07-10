@@ -534,8 +534,8 @@ function hintNoSpeech(){
 }
 function speak(t){
   duckBgm();
-  // まずインターネットの音声で鳴らす（プレビューの中でもダウンロードなしで鳴る）。ダメなら読み上げ機能にフォールバック。
-  playOnlineVoice(t).catch(()=>speakLocal(t));
+  // オンライン音声(streamelements)は現在401で使えないため、端末の読み上げ(Web Speech)を直接使う。
+  speakLocal(t);
 }
 let bgmDuckT=null;
 function duckBgm(){
@@ -1147,8 +1147,11 @@ document.getElementById('voiceTestBtn').onclick=function(){
   n.querySelector('.note-x').onclick=()=>n.remove();
   if(ss){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance('test');u.lang='en-US';u.rate=0.9;if(enVoice)u.voice=enVoice;speechSynthesis.speak(u);}catch(e){}}
 };
+// 最初のタップ/クリックで効果音のAudioContextを起こす(モバイル対策)
+(function(){function unlock(){try{ac();}catch(e){}document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
+document.addEventListener('pointerdown',unlock,{once:true});document.addEventListener('touchstart',unlock,{once:true});})();
 const bgm=document.getElementById('bgm');
-if(bgm){bgm.volume=0.35;bgm.loop=true;}
+if(bgm){bgm.volume=0.35;bgm.loop=true;bgm.setAttribute('playsinline','');}
 document.getElementById('bgmBtn').onclick=function(){
   if(!bgm)return;
   if(bgm.paused){bgm.play().then(()=>{this.classList.remove('off');}).catch(()=>{this.classList.add('off');});}
