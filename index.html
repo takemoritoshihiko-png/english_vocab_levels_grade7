@@ -519,12 +519,14 @@ const BAD_VOICES=['Aaron','Nicky'];
 function loadVoices(){
   const vs=speechSynthesis.getVoices();
   const en=vs.filter(v=>/^en/i.test(v.lang));
-  let pick=null;
-  for(const nm of GOOD_VOICES){ pick=en.find(v=>v.name.indexOf(nm)===0); if(pick)break; }
+  // ★Chromeは端末内蔵(local)音声だと「イベントは出るが無音」の個体がある。
+  //   ブラウザ自身の音の出口を通るネットワーク音声(Google等)を最優先にする。
+  let pick = en.find(v=>!v.localService && /en[-_]?US/i.test(v.lang))
+          || en.find(v=>!v.localService);
+  if(!pick){ for(const nm of GOOD_VOICES){ pick=en.find(v=>v.name.indexOf(nm)===0); if(pick)break; } }
   enVoice = pick
     || en.find(v=>v.localService&&BAD_VOICES.indexOf(v.name)<0&&/en[-_]?US/i.test(v.lang))
     || en.find(v=>v.default)
-    || en.find(v=>v.localService&&BAD_VOICES.indexOf(v.name)<0)
     || en[0] || null;
 }
 if('speechSynthesis' in window){loadVoices();speechSynthesis.addEventListener('voiceschanged',loadVoices);}
@@ -1166,7 +1168,7 @@ document.getElementById('voiceTestBtn').onclick=function(){
   document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
 document.addEventListener('pointerdown',unlock,{once:true});document.addEventListener('touchstart',unlock,{once:true});})();
 // 新版が届いてるか一目で分かる目印(キャッシュ判別用)
-document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 10 \u30fb 2026-07-11</div>');
+document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 11 \u30fb 2026-07-11</div>');
 const bgm=document.getElementById('bgm');
 if(bgm){bgm.volume=0.35;bgm.loop=true;bgm.setAttribute('playsinline','');}
 document.getElementById('bgmBtn').onclick=function(){
