@@ -549,8 +549,25 @@ function hintNoSpeech(){
 }
 function speak(t){
   duckBgm();
-  // オンライン音声(streamelements)は現在401で使えないため、端末の読み上げ(Web Speech)を直接使う。
-  speakLocal(t);
+  // まず自前の発音ファイル(audio/xxx.m4a)を<audio>で鳴らす。これはBGMと同じ確実な音経路。
+  // 万一ファイルが無ければ端末の読み上げにフォールバック。
+  playWordAudio(t).catch(()=>speakLocal(t));
+}
+function playWordAudio(t){
+  return new Promise((res,rej)=>{
+    try{
+      const fn=String(t).toLowerCase().replace(/[^a-z0-9]+/g,'_');
+      const a=new Audio('audio/'+fn+'.m4a');
+      a.volume=1;
+      let done=false;
+      a.addEventListener('playing',()=>{done=true;res();});
+      a.addEventListener('ended',()=>{res();});
+      a.addEventListener('error',()=>{if(!done)rej();});
+      const p=a.play();
+      if(p&&p.catch)p.catch(()=>{if(!done)rej();});
+      setTimeout(()=>{if(!done)rej();},1600);
+    }catch(e){rej();}
+  });
 }
 let bgmDuckT=null;
 function duckBgm(){
@@ -1168,7 +1185,7 @@ document.getElementById('voiceTestBtn').onclick=function(){
   document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
 document.addEventListener('pointerdown',unlock,{once:true});document.addEventListener('touchstart',unlock,{once:true});})();
 // 新版が届いてるか一目で分かる目印(キャッシュ判別用)
-document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 11 \u30fb 2026-07-11</div>');
+document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 12 \u30fb 2026-07-11</div>');
 const bgm=document.getElementById('bgm');
 if(bgm){bgm.volume=0.35;bgm.loop=true;bgm.setAttribute('playsinline','');}
 document.getElementById('bgmBtn').onclick=function(){
