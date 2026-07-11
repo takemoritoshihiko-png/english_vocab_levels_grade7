@@ -1146,9 +1146,14 @@ document.getElementById('voiceTestBtn').onclick=function(){
   n.querySelector('.note-x').onclick=()=>n.remove();
   if(ss){try{speechSynthesis.cancel();let st=false;const u=new SpeechSynthesisUtterance('test');u.lang='en-US';u.rate=0.9;if(enVoice)u.voice=enVoice;u.onstart=()=>{st=true;};speechSynthesis.speak(u);setTimeout(()=>{if(!st&&!speechSynthesis.speaking&&!speechSynthesis.pending){const u2=new SpeechSynthesisUtterance('test');u2.lang='en-US';u2.rate=0.9;speechSynthesis.speak(u2);}},450);}catch(e){}}
 };
-// 最初のタップ/クリックで効果音のAudioContextを起こす(モバイル対策)
-(function(){function unlock(){try{ac();}catch(e){}document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
+// 最初のタップ/クリックで効果音を起こし、BGMも自動再生(🎵を探さなくてOK)
+(function(){function unlock(){try{ac();}catch(e){}
+  var b=document.getElementById('bgm');
+  if(b&&b.paused){b.play().then(function(){var btn=document.getElementById('bgmBtn');if(btn)btn.classList.remove('off');}).catch(function(){});}
+  document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
 document.addEventListener('pointerdown',unlock,{once:true});document.addEventListener('touchstart',unlock,{once:true});})();
+// 新版が届いてるか一目で分かる目印(キャッシュ判別用)
+document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 9 \u30fb 2026-07-11</div>');
 const bgm=document.getElementById('bgm');
 if(bgm){bgm.volume=0.35;bgm.loop=true;bgm.setAttribute('playsinline','');}
 document.getElementById('bgmBtn').onclick=function(){
