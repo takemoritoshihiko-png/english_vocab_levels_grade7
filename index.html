@@ -513,7 +513,20 @@ function words(){return DATA[cur];}
 /* ---- 発音 ---- */
 let enVoice=null, hintedNoSpeech=false;
 const inFrame=(function(){try{return window.self!==window.top;}catch(e){return true;}})();
-function loadVoices(){const vs=speechSynthesis.getVoices();const en=vs.filter(v=>/^en/i.test(v.lang));enVoice=en.find(v=>v.default&&/en[-_]?US/i.test(v.lang))||en.find(v=>/en[-_]?US/i.test(v.lang)&&v.localService)||en.find(v=>v.localService)||en.find(v=>/en[-_]?US/i.test(v.lang))||en.find(v=>v.default)||en[0]||null;}
+// 確実に鳴る音声を優先し、未DLで無音になるSiri系(Aaron/Nicky等)を避ける
+const GOOD_VOICES=['Samantha','Alex','Victoria','Google US English','Microsoft Zira','Microsoft David','Microsoft Mark','Karen','Moira','Tessa','Daniel','Google UK English'];
+const BAD_VOICES=['Aaron','Nicky'];
+function loadVoices(){
+  const vs=speechSynthesis.getVoices();
+  const en=vs.filter(v=>/^en/i.test(v.lang));
+  let pick=null;
+  for(const nm of GOOD_VOICES){ pick=en.find(v=>v.name.indexOf(nm)===0); if(pick)break; }
+  enVoice = pick
+    || en.find(v=>v.localService&&BAD_VOICES.indexOf(v.name)<0&&/en[-_]?US/i.test(v.lang))
+    || en.find(v=>v.default)
+    || en.find(v=>v.localService&&BAD_VOICES.indexOf(v.name)<0)
+    || en[0] || null;
+}
 if('speechSynthesis' in window){loadVoices();speechSynthesis.addEventListener('voiceschanged',loadVoices);}
 function hintNoSpeech(){
   if(hintedNoSpeech)return;hintedNoSpeech=true;
@@ -1153,7 +1166,7 @@ document.getElementById('voiceTestBtn').onclick=function(){
   document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
 document.addEventListener('pointerdown',unlock,{once:true});document.addEventListener('touchstart',unlock,{once:true});})();
 // 新版が届いてるか一目で分かる目印(キャッシュ判別用)
-document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 9 \u30fb 2026-07-11</div>');
+document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 10 \u30fb 2026-07-11</div>');
 const bgm=document.getElementById('bgm');
 if(bgm){bgm.volume=0.35;bgm.loop=true;bgm.setAttribute('playsinline','');}
 document.getElementById('bgmBtn').onclick=function(){
