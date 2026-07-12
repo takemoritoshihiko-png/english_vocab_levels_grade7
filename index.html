@@ -801,6 +801,7 @@ document.getElementById('revClearBtn').onclick=()=>{words().forEach(d=>d.wrong=f
 
 /* ---- coins & shop ---- */
 let coins=0;
+let bgmWanted=true; // BGMのON/OFF(保存対象)
 function updateCoins(){
   document.getElementById('coinN').textContent=coins;
   const sb=document.getElementById('shopBal');if(sb)sb.textContent=coins;
@@ -1195,7 +1196,7 @@ function saveState(){
     const learned={},wrong={};
     Object.values(DATA).forEach(arr=>arr.forEach(d=>{if(d.learned)learned[d.w]=1;if(d.wrong)wrong[d.w]=1;}));
     localStorage.setItem(SAVE_KEY,JSON.stringify({
-      v:1, coins, team, cur,
+      v:1, coins, team, cur, bgmWanted,
       ownedChars:[...ownedChars],
       owned:{bg:[...owned.bg],frame:[...owned.frame],bbg:[...owned.bbg]},
       equipped:{bg:equipped.bg,frame:equipped.frame,bbg:equipped.bbg},
@@ -1210,6 +1211,7 @@ function loadState(){
     const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;
     const d=JSON.parse(raw);
     if(typeof d.coins==='number')coins=d.coins;
+    if(typeof d.bgmWanted==='boolean')bgmWanted=d.bgmWanted;
     if(Array.isArray(d.ownedChars)){ownedChars.clear();d.ownedChars.forEach(x=>ownedChars.add(x));}
     ownedChars.add('c1');
     if(Array.isArray(d.team)){const t=d.team.filter(id=>ownedChars.has(id));if(t.length)team=t;}
@@ -1250,19 +1252,22 @@ document.getElementById('voiceTestBtn').onclick=function(){
   if(ss){try{speechSynthesis.cancel();let st=false;const u=new SpeechSynthesisUtterance('test');u.lang='en-US';u.rate=0.9;if(enVoice)u.voice=enVoice;u.onstart=()=>{st=true;};speechSynthesis.speak(u);setTimeout(()=>{if(!st&&!speechSynthesis.speaking&&!speechSynthesis.pending){const u2=new SpeechSynthesisUtterance('test');u2.lang='en-US';u2.rate=0.9;speechSynthesis.speak(u2);}},450);}catch(e){}}
 };
 // 最初のタップ/クリックで効果音を起こし、BGMも自動再生(🎵を探さなくてOK)
-(function(){function unlock(){try{ac();}catch(e){}
-  var b=document.getElementById('bgm');
-  if(b&&b.paused){b.play().then(function(){var btn=document.getElementById('bgmBtn');if(btn)btn.classList.remove('off');}).catch(function(){});}
-  document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
+function applyBgm(){var b=document.getElementById('bgm');var btn=document.getElementById('bgmBtn');if(!b)return;
+  if(bgmWanted){var p=b.play();if(p&&p.catch)p.catch(function(){});if(btn)btn.classList.remove('off');}
+  else{b.pause();if(btn)btn.classList.add('off');}}
+(function(){function unlock(){try{ac();}catch(e){} if(bgmWanted)applyBgm(); document.removeEventListener('pointerdown',unlock);document.removeEventListener('touchstart',unlock);}
 document.addEventListener('pointerdown',unlock,{once:true});document.addEventListener('touchstart',unlock,{once:true});})();
 // 新版が届いてるか一目で分かる目印(キャッシュ判別用)
-document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 12 \u30fb 2026-07-11</div>');
+document.body.insertAdjacentHTML('beforeend','<div style="text-align:center;font-size:11px;color:#8a8ab0;padding:10px 0;">\uD83D\uDD0A audio build 13 \u30fb 2026-07-11</div>');
 const bgm=document.getElementById('bgm');
 if(bgm){bgm.volume=0.35;bgm.loop=true;bgm.setAttribute('playsinline','');}
+document.getElementById('bgmBtn').classList.toggle('off', !bgmWanted);
+document.getElementById('bgmBtn').title='BGM '+(bgmWanted?'ON→OFF':'OFF→ON');
 document.getElementById('bgmBtn').onclick=function(){
-  if(!bgm)return;
-  if(bgm.paused){bgm.play().then(()=>{this.classList.remove('off');}).catch(()=>{this.classList.add('off');});}
-  else{bgm.pause();this.classList.add('off');}
+  bgmWanted=!bgmWanted;
+  this.title='BGM '+(bgmWanted?'ON→OFF':'OFF→ON');
+  applyBgm();
+  saveState();
 };
 </script>
 <audio id="bgm" loop preload="auto" src="bgm.mp3"></audio>
