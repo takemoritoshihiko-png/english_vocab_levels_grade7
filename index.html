@@ -1166,10 +1166,50 @@ document.getElementById('btClose').onclick=closeBattle;
 document.getElementById('btrClose').onclick=closeBattle;
 
 
+/* ---- セーブ / 自動保存(localStorage) ---- */
+const SAVE_KEY='engvocab_save_v1';
+function saveState(){
+  try{
+    const learned={},wrong={};
+    Object.values(DATA).forEach(arr=>arr.forEach(d=>{if(d.learned)learned[d.w]=1;if(d.wrong)wrong[d.w]=1;}));
+    localStorage.setItem(SAVE_KEY,JSON.stringify({
+      v:1, coins, team, cur,
+      ownedChars:[...ownedChars],
+      owned:{bg:[...owned.bg],frame:[...owned.frame],bbg:[...owned.bbg]},
+      equipped:{bg:equipped.bg,frame:equipped.frame,bbg:equipped.bbg},
+      learned, wrong
+    }));
+    const el=document.getElementById('saveTag');
+    if(el){const t=new Date();const p=n=>String(n).padStart(2,'0');el.textContent='\uD83D\uDCBE 自動保存済み '+p(t.getHours())+':'+p(t.getMinutes())+':'+p(t.getSeconds());}
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(typeof d.coins==='number')coins=d.coins;
+    if(Array.isArray(d.ownedChars)){ownedChars.clear();d.ownedChars.forEach(x=>ownedChars.add(x));}
+    ownedChars.add('c1');
+    if(Array.isArray(d.team)){const t=d.team.filter(id=>ownedChars.has(id));if(t.length)team=t;}
+    if(d.owned)['bg','frame','bbg'].forEach(k=>{owned[k].clear();owned[k].add('default');(d.owned[k]||[]).forEach(x=>owned[k].add(x));});
+    if(d.equipped)['bg','frame','bbg'].forEach(k=>{if(d.equipped[k])equipped[k]=d.equipped[k];});
+    Object.values(DATA).forEach(arr=>arr.forEach(x=>{x.learned=!!(d.learned&&d.learned[x.w]);x.wrong=!!(d.wrong&&d.wrong[x.w]);}));
+    if(d.cur&&DATA[d.cur])cur=d.cur;
+    return true;
+  }catch(e){return false;}
+}
+
 /* ---- init ---- */
+loadState();
+document.body.insertAdjacentHTML('beforeend','<div id="saveTag" style="text-align:center;font-size:11px;color:#8a8ab0;padding:4px 0 14px;">\uD83D\uDCBE 自動保存 ON</div>');
 applyBackground();
 updateCoins();
-renderList();
+setLevel(cur);
+saveState();
+setInterval(saveState,10000);
+window.addEventListener('beforeunload',saveState);
+window.addEventListener('pagehide',saveState);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveState();});
 document.getElementById('sfxBtn').onclick=function(){sfxOn=!sfxOn;this.textContent=sfxOn?'🔊':'🔇';this.classList.toggle('off',!sfxOn);if(sfxOn){ac();sfx.click();}else if(actx){try{actx.suspend();}catch(e){}}};
 document.getElementById('voiceTestBtn').onclick=function(){
   const ss=('speechSynthesis' in window);
