@@ -509,6 +509,7 @@ Object.values(DATA).forEach(arr=>arr.forEach(d=>{d.learned=false;d.wrong=false;}
 
 let cur=1;
 function words(){return DATA[cur];}
+function allWords(){return DATA[1].concat(DATA[2]||[],DATA[3]||[]);}
 
 /* ---- 発音 ---- */
 let enVoice=null, hintedNoSpeech=false;
@@ -712,27 +713,35 @@ function startQuiz(mode='all'){
 }
 function renderQ(){
   const d=qs[qi];
-  const askMean=Math.random()<0.5;
+  const r=Math.random();
+  const kind = r<0.34 ? 'mean' : (r<0.67 ? 'word' : 'cloze');
   document.getElementById('qNum').textContent=`Q${qi+1} / ${qs.length}`;
   document.getElementById('qScore').textContent=`スコア ${score}`;
   document.getElementById('qBar').style.width=`${(qi/qs.length)*100}%`;
-  document.getElementById('qEmoji').textContent=d.e;
+  document.getElementById('qEmoji').textContent='❓';   // 絵文字ヒントは隠す(難易度UP)
   document.getElementById('qFb').textContent='';document.getElementById('qFb').className='feedback';
   const enEl=document.getElementById('qEn');
   const sp=document.getElementById('qSpeak');sp.onclick=()=>speak(d.w);
   const opts=document.getElementById('qOpts');opts.innerHTML='';
+  const AW=allWords();   // 誤答は全レベルから(紛らわしく)
   let correct;
-  if(askMean){
+  if(kind==='mean'){
     enEl.textContent=d.w;enEl.style.fontSize='30px';sp.classList.remove('hidden');
     document.getElementById('qQ').textContent='意味は？';
     correct=d.mean;
-    const pool=shuffle(words().filter(x=>x.mean!==d.mean)).slice(0,3).map(x=>x.mean);
+    const pool=shuffle(AW.filter(x=>x.mean!==d.mean)).slice(0,5).map(x=>x.mean);
     build(opts,shuffle([correct,...pool]),correct);
-  }else{
+  }else if(kind==='word'){
     enEl.textContent=d.mean;enEl.style.fontSize='19px';sp.classList.add('hidden');
     document.getElementById('qQ').textContent='英単語は？';
     correct=d.w;
-    const pool=shuffle(words().filter(x=>x.w!==d.w)).slice(0,3).map(x=>x.w);
+    const pool=shuffle(AW.filter(x=>x.w!==d.w)).slice(0,5).map(x=>x.w);
+    build(opts,shuffle([correct,...pool]),correct);
+  }else{
+    enEl.innerHTML=(d.en||d.mean).replace(/<b>.*?<\/b>/,'＿＿＿');enEl.style.fontSize='16px';sp.classList.add('hidden');
+    document.getElementById('qQ').textContent='空所に入る英単語は？';
+    correct=d.w;
+    const pool=shuffle(AW.filter(x=>x.w!==d.w)).slice(0,5).map(x=>x.w);
     build(opts,shuffle([correct,...pool]),correct);
   }
 }
@@ -741,6 +750,7 @@ function build(opts,arr,correct){
 }
 function answer(btn,ok,correct,opts){
   const d=qs[qi];
+  document.getElementById('qEmoji').textContent=d.e;
   const sp=document.getElementById('qSpeak');sp.classList.remove('hidden');sp.onclick=()=>speak(d.w);
   [...opts.children].forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
   const fb=document.getElementById('qFb');
@@ -981,7 +991,7 @@ function misspell(w,n){
 }
 function pickN(arr,key,n){return shuffle([...arr]).slice(0,n).map(key);}
 function getQuestion(d){
-  const others=words().filter(x=>x.w!==d.w);
+  const others=allWords().filter(x=>x.w!==d.w);
   const kinds=['mean','rev','sent','spellmc','listen','spell'];
   const kind=kinds[Math.floor(Math.random()*kinds.length)];
   if(kind==='mean')return {kind:'mc',show:d.w,small:false,options:shuffle([d.mean,...pickN(others,x=>x.mean,3)]),answer:d.mean};
@@ -992,7 +1002,7 @@ function getQuestion(d){
   return {kind:'spell',show:d.mean,small:true,answer:d.w};
 }
 function enemyFor(){
-  const b={1:{hp:150,atk:52,def:55,spe:62},2:{hp:200,atk:66,def:66,spe:74},3:{hp:250,atk:80,def:78,spe:86}}[cur];
+  const b={1:{hp:210,atk:68,def:70,spe:70},2:{hp:300,atk:88,def:86,spe:84},3:{hp:400,atk:106,def:100,spe:96}}[cur];
   return {hp:b.hp,maxhp:b.hp,atk:b.atk,def:b.def,spe:b.spe};
 }
 function active(){return teamState[activeIdx];}
@@ -1131,8 +1141,8 @@ function doPlayerHit(){
 function doEnemyHit(){
   const a=active();
   const A=eStat(enemy.atk,enemy.stages.atk),D=eStat(a.c.def,a.stages.def);
-  let dmg=Math.round(50*(A/(D+40))*(0.9+Math.random()*0.2));
-  let crit=false;if(Math.random()<0.10){dmg=Math.round(dmg*1.7);crit=true;}
+  let dmg=Math.round((44+cur*12)*(A/(D+40))*(0.9+Math.random()*0.2));
+  let crit=false;if(Math.random()<0.14){dmg=Math.round(dmg*1.7);crit=true;}
   if(a.id==='c5'&&Math.random()<0.25)dmg=Math.round(dmg/2);
   a.hp-=dmg;let extra='';
   if(a.id==='c4'&&Math.random()<0.5){const ref=Math.round(dmg/2);enemy.hp-=ref;extra=` 反撃で${ref}返した 🌀`;}
