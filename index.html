@@ -718,7 +718,7 @@ function renderQ(){
   document.getElementById('qNum').textContent=`Q${qi+1} / ${qs.length}`;
   document.getElementById('qScore').textContent=`スコア ${score}`;
   document.getElementById('qBar').style.width=`${(qi/qs.length)*100}%`;
-  document.getElementById('qEmoji').textContent='❓';   // 絵文字ヒントは隠す(難易度UP)
+  document.getElementById('qEmoji').textContent=d.e;
   document.getElementById('qFb').textContent='';document.getElementById('qFb').className='feedback';
   const enEl=document.getElementById('qEn');
   const sp=document.getElementById('qSpeak');sp.onclick=()=>speak(d.w);
@@ -750,7 +750,6 @@ function build(opts,arr,correct){
 }
 function answer(btn,ok,correct,opts){
   const d=qs[qi];
-  document.getElementById('qEmoji').textContent=d.e;
   const sp=document.getElementById('qSpeak');sp.classList.remove('hidden');sp.onclick=()=>speak(d.w);
   [...opts.children].forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
   const fb=document.getElementById('qFb');
