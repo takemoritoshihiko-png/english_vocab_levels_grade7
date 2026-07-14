@@ -1027,22 +1027,22 @@ function getQuestion(d){
   return {kind:'spell',show:d.mean,small:true,answer:d.w};
 }
 // ==== 敵ロスター(L1相当を基準ステータス、レベルで倍率) ====
-const LVMUL={1:{hp:1.0,st:1.0},2:{hp:1.43,st:1.29},3:{hp:1.9,st:1.55}};
+const LVMUL={1:{hp:0.92,st:0.94},2:{hp:1.28,st:1.2},3:{hp:1.55,st:1.35}};
 const ENEMY_ROSTER=[
  {key:'slime',name:'スペルスライム',emoji:'🟢',ai:'balanced',hp:210,atk:66,spa:62,def:66,spe:64,
   moves:[{n:'たいあたり',cat:'物理',pow:50},{n:'スペルショット',cat:'特殊',pow:55},{n:'からみつく',cat:'へんか',target:'enemy',stat:'spe',stage:-1},{n:'れんぞくパンチ',cat:'物理',pow:30,hits:2}]},
- {key:'golem',name:'ぶんぽうゴーレム',emoji:'🗿',ai:'tank',hp:280,atk:74,spa:40,def:92,spe:40,
-  moves:[{n:'いわおとし',cat:'物理',pow:62},{n:'かたくなる',cat:'へんか',target:'self',stat:'def',stage:2},{n:'のしかかり',cat:'物理',pow:68},{n:'ガードクラッシュ',cat:'物理',pow:55,eff:{stat:'def',stage:-1,target:'enemy',chance:0.4}}]},
+ {key:'golem',name:'ぶんぽうゴーレム',emoji:'🗿',ai:'tank',hp:235,atk:74,spa:40,def:74,spe:40,
+  moves:[{n:'いわおとし',cat:'物理',pow:62},{n:'かたくなる',cat:'へんか',target:'self',stat:'def',stage:1},{n:'のしかかり',cat:'物理',pow:68},{n:'ガードクラッシュ',cat:'物理',pow:55,eff:{stat:'def',stage:-1,target:'enemy',chance:0.4}}]},
  {key:'owl',name:'はつおんフクロウ',emoji:'🦉',ai:'special',hp:185,atk:45,spa:82,def:55,spe:92,
   moves:[{n:'エコーボイス',cat:'特殊',pow:58},{n:'みだれつつき',cat:'物理',pow:25,hits:2},{n:'フェザーダンス',cat:'へんか',target:'enemy',stat:'atk',stage:-1},{n:'はやわざ',cat:'物理',pow:38,pri:true}]},
  {key:'fox',name:'なぞなぞキツネ',emoji:'🦊',ai:'trick',hp:200,atk:56,spa:66,def:60,spe:76,
   moves:[{n:'トリック',cat:'特殊',pow:55,eff:{stat:'atk',stage:-1,target:'enemy',chance:0.5}},{n:'めくらまし',cat:'へんか',target:'enemy',stat:'def',stage:-1},{n:'かみつく',cat:'物理',pow:56},{n:'ドレインキッス',cat:'特殊',pow:50,drain:0.5}]},
  {key:'mole',name:'がくしゃモグラ',emoji:'🦫',ai:'healer',hp:235,atk:62,spa:55,def:76,spe:44,
   moves:[{n:'じしん',cat:'物理',pow:62},{n:'やすむ',cat:'かいふく',heal:0.3},{n:'つちけむり',cat:'へんか',target:'enemy',stat:'spe',stage:-1},{n:'ちからをためる',cat:'へんか',target:'self',stat:'atk',stage:2}]},
- {key:'king',name:'たんごの王',emoji:'👑',ai:'aggro',boss:true,regen:0.04,hp:280,atk:82,spa:78,def:80,spe:70,
+ {key:'king',name:'たんごの王',emoji:'👑',ai:'aggro',boss:true,regen:0.015,hp:205,atk:76,spa:72,def:74,spe:70,
   moves:[{n:'おうのいちげき',cat:'物理',pow:78},{n:'ダブルスラッシュ',cat:'物理',pow:42,hits:2},{n:'いかく',cat:'へんか',target:'enemy',stat:'atk',stage:-1},{n:'キングボイス',cat:'特殊',pow:72,eff:{stat:'spa',stage:-1,target:'enemy',chance:0.3}}]},
- {key:'dragon',name:'ものしりドラゴン',emoji:'🐲',ai:'aggro',boss:true,hp:300,atk:76,spa:92,def:76,spe:82,
-  moves:[{n:'ドラゴンブレス',cat:'特殊',pow:80},{n:'りゅうのいかり',cat:'物理',pow:66},{n:'メテオ',cat:'特殊',pow:92,recoil:0.25},{n:'つばさガード',cat:'へんか',target:'self',stat:'def',stage:2},{n:'かみくだく',cat:'物理',pow:60,eff:{stat:'def',stage:-1,target:'enemy',chance:0.4}}]},
+ {key:'dragon',name:'ものしりドラゴン',emoji:'🐲',ai:'aggro',boss:true,hp:255,atk:70,spa:84,def:76,spe:82,
+  moves:[{n:'ドラゴンブレス',cat:'特殊',pow:80},{n:'りゅうのいかり',cat:'物理',pow:66},{n:'メテオ',cat:'特殊',pow:82,recoil:0.25},{n:'つばさガード',cat:'へんか',target:'self',stat:'def',stage:2},{n:'かみくだく',cat:'物理',pow:60,eff:{stat:'def',stage:-1,target:'enemy',chance:0.4}}]},
 ];
 function enemyFor(){
   const boss=Math.random()<(0.08+(cur-1)*0.05);
@@ -1277,7 +1277,7 @@ function chooseEnemyMove(enemy,target){
 function finishBattle(win){
   document.getElementById('btPlay').classList.add('hidden');
   document.getElementById('btResult').classList.remove('hidden');
-  let reward=win?(20+cur*10+((enemy&&enemy.boss)?35:0)+(team.includes('c3')?5:0)):5;
+  let reward=win?(25+cur*12+((enemy&&enemy.boss)?40:0)+(team.includes('c3')?5:0)):5;
   if(win)battleWord.learned=true;
   coins+=reward;updateCoins();
   if(win)sfx.win(); else sfx.lose();
