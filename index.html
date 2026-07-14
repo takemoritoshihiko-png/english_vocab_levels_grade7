@@ -986,7 +986,7 @@ function renderGacha(){
       <div class="cstats">${has?`HP${c.hp}/攻${c.atk}/特${c.spa}/防${c.def}/速${c.spe}`:'ガチャで出るよ'}</div>
       <div class="perk">${has?'✦ '+c.trait:''}</div>
       ${has?`<button class="use">${inTeam?'★ チーム中（タップで外す）':'＋ チームに入れる'}</button>`:''}
-      ${has&&c.mega?(megaUnlocked.has(c.id)?`<div class="perk" style="color:#c026d3;font-weight:800">⚡ メガ進化 解放済み</div>`:`<button onclick="buyMega('${c.id}')" style="margin-top:6px;border:none;border-radius:10px;padding:7px 10px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#a855f7,#ec4899);color:#fff;font-size:12px">⚡ メガ解放 🪙${MEGA_COST}</button>`):''}`;
+      ${has&&c.mega?(megaUnlocked.has(c.id)?`<div class="perk" style="color:#c026d3;font-weight:800">⚡ メガストーン 所持ずみ</div>`:`<button onclick="buyMega('${c.id}')" style="margin-top:6px;border:none;border-radius:10px;padding:7px 10px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#a855f7,#ec4899);color:#fff;font-size:12px">⚡ メガストーンを買う 🪙${MEGA_COST}</button>`):''}`;
     if(has)el.querySelector('.use').onclick=()=>toggleTeam(c.id);
     g.appendChild(el);
   });
@@ -995,9 +995,9 @@ function buyMega(id){
   const c=getChar(id);if(!c||!c.mega)return;
   if(megaUnlocked.has(id))return;
   if(coins<MEGA_COST){alert('コインが足りないよ（'+MEGA_COST+'🪙 必要）');return;}
-  if(!confirm(c.name+' の「メガ進化」を '+MEGA_COST+'コインで解放する？\nバトル中に1回だけ変身して大幅パワーアップできるよ！'))return;
+  if(!confirm(c.name+' の「メガストーン」を '+MEGA_COST+'コインで買う？\nこの道具を持っていれば、バトル中いつでもメガ進化できるよ！'))return;
   coins-=MEGA_COST;megaUnlocked.add(id);updateCoins();saveState();renderGacha();
-  alert('⚡ '+c.name+' がバトル中に「メガ進化」できるようになった！');
+  alert('⚡ メガストーンを手に入れた！ '+c.name+' がバトル中にメガ進化できるようになった！');
 }
 document.getElementById('pullBtn').onclick=doPull;
 
@@ -1092,8 +1092,8 @@ function canMega(b){return !!(b&&b.c&&b.c.mega&&megaUnlocked.has(b.id));}
 function battleAvatar(b,cls){if(b.mega&&b.c.mega&&b.c.mega.img)return `<div class="${cls}" style="background-image:url('${b.c.mega.img}')"></div>`;return avatarHTML(b.c,cls);}
 function doMega(){
   const a=active();
-  if(megaUsed||a.mega||!canMega(a))return;
-  megaUsed=true;a.mega=true;
+  if(a.mega||!canMega(a))return;
+  a.mega=true;
   const boost=(a.c.mega.hp*2)-a.maxhp;
   if(boost>0){a.maxhp+=boost;a.hp+=boost;}
   if(sfx.levelup)sfx.levelup();
@@ -1115,7 +1115,7 @@ function renderMoves(){
   });
   area.appendChild(wrap);
   const av=active();
-  if(canMega(av)&&!megaUsed&&!av.mega){
+  if(canMega(av)&&!av.mega){
     const mb=document.createElement('button');
     mb.textContent='⚡ メガ進化する！';
     mb.style.cssText='display:block;margin:12px auto 0;border:none;border-radius:14px;padding:11px 22px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(90deg,#a855f7,#ec4899);box-shadow:0 4px 14px rgba(168,85,247,.5);';
