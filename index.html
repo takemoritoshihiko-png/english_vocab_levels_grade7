@@ -31,6 +31,7 @@
   .lvbtn[data-level="1"].active{background:var(--lv1);border-color:var(--lv1);color:#fff}
   .lvbtn[data-level="2"].active{background:var(--lv2);border-color:var(--lv2);color:#fff}
   .lvbtn[data-level="3"].active{background:var(--lv3);border-color:var(--lv3);color:#fff}
+  .lvbtn[data-level="4"].active{background:#7c3aed;border-color:#7c3aed;color:#fff}
 
   .legend{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
   .leg{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:14px;padding:7px 12px;box-shadow:var(--shadow);font-size:12px;font-weight:700;color:var(--muted)}
@@ -243,6 +244,7 @@
     <button class="lvbtn active" data-level="1">レベル1</button>
     <button class="lvbtn" data-level="2">レベル2 🔥</button>
     <button class="lvbtn" data-level="3">レベル3 👑</button>
+    <button class="lvbtn" data-level="4">レベル4 🏆</button>
   </div>
 
   <div class="legend">
@@ -504,12 +506,44 @@ const DATA={
   {w:"sporadic",lv:"formal",ipa:"/spəˈrædɪk/",mean:"時々の・散発的な",en:"There was <b>sporadic</b> applause.",ja:"まばらな拍手があった。",e:"🌦️"},
   {w:"discern",lv:"formal",ipa:"/dɪˈsɜːrn/",mean:"見分ける・見きわめる",en:"It's hard to <b>discern</b> the difference.",ja:"その違いは見分けにくい。",e:"👁️"},
  ],
+ 4:[
+  {w:"perfunctory",lv:"formal",ipa:"/pərˈfʌŋktəri/",mean:"おざなりの・いいかげんな",en:"He gave a <b>perfunctory</b> nod and left.",ja:"彼はおざなりにうなずいて去った。",e:"😐"},
+  {w:"magnanimous",lv:"formal",ipa:"/mæɡˈnænɪməs/",mean:"度量が大きい・寛大な",en:"She was <b>magnanimous</b> in victory.",ja:"彼女は勝っても寛大だった。",e:"🕊️"},
+  {w:"capricious",lv:"formal",ipa:"/kəˈprɪʃəs/",mean:"気まぐれな",en:"The weather here is <b>capricious</b>.",ja:"ここの天気は気まぐれだ。",e:"🎭"},
+  {w:"insidious",lv:"formal",ipa:"/ɪnˈsɪdiəs/",mean:"じわじわ進む・陰険な",en:"The disease is slow and <b>insidious</b>.",ja:"その病気はじわじわ進行する。",e:"🐍"},
+  {w:"laconic",lv:"neutral",ipa:"/ləˈkɒnɪk/",mean:"言葉数が少ない・素っ気ない",en:"His <b>laconic</b> reply surprised us.",ja:"彼の素っ気ない返事に驚いた。",e:"🤐"},
+  {w:"obfuscate",lv:"formal",ipa:"/ˈɒbfʌskeɪt/",mean:"わざと分かりにくくする",en:"They try to <b>obfuscate</b> the truth.",ja:"彼らは真実をわざとぼかす。",e:"🌫️"},
+  {w:"quixotic",lv:"formal",ipa:"/kwɪkˈsɒtɪk/",mean:"非現実的で理想主義な",en:"It was a <b>quixotic</b> plan to save the world.",ja:"世界を救う非現実的な計画だった。",e:"🗡️"},
+  {w:"recalcitrant",lv:"formal",ipa:"/rɪˈkælsɪtrənt/",mean:"反抗的で言うことを聞かない",en:"The <b>recalcitrant</b> student ignored the rules.",ja:"反抗的な生徒は規則を無視した。",e:"😤"},
+  {w:"sanguine",lv:"formal",ipa:"/ˈsæŋɡwɪn/",mean:"楽観的な",en:"She stayed <b>sanguine</b> about the future.",ja:"彼女は将来に楽観的だった。",e:"🌅"},
+  {w:"taciturn",lv:"neutral",ipa:"/ˈtæsɪtɜːrn/",mean:"無口な",en:"My uncle is a <b>taciturn</b> man.",ja:"おじは無口な人だ。",e:"🙊"},
+  {w:"vociferous",lv:"formal",ipa:"/vəˈsɪfərəs/",mean:"声高に主張する",en:"<b>Vociferous</b> protests filled the street.",ja:"声高な抗議が通りを埋めた。",e:"📣"},
+  {w:"mercurial",lv:"formal",ipa:"/mɜːrˈkjʊəriəl/",mean:"気分屋の・変わりやすい",en:"His <b>mercurial</b> moods are hard to predict.",ja:"彼の気まぐれな気分は読めない。",e:"🌡️"},
+  {w:"truculent",lv:"formal",ipa:"/ˈtrʌkjʊlənt/",mean:"けんか腰の",en:"A <b>truculent</b> customer began to shout.",ja:"けんか腰の客が怒鳴りだした。",e:"😠"},
+  {w:"obsequious",lv:"formal",ipa:"/əbˈsiːkwiəs/",mean:"こびへつらう",en:"The <b>obsequious</b> waiter bowed too much.",ja:"こびる店員は何度もお辞儀した。",e:"🙇"},
+  {w:"fastidious",lv:"neutral",ipa:"/fæˈstɪdiəs/",mean:"細かいことにうるさい",en:"He is <b>fastidious</b> about cleanliness.",ja:"彼は清潔さにうるさい。",e:"🧐"},
+  {w:"garrulous",lv:"neutral",ipa:"/ˈɡærələs/",mean:"おしゃべりな",en:"A <b>garrulous</b> neighbor talked for hours.",ja:"おしゃべりな隣人が何時間も話した。",e:"🗣️"},
+  {w:"iconoclast",lv:"formal",ipa:"/aɪˈkɒnəklæst/",mean:"因習を打破する人",en:"She is famous as an <b>iconoclast</b>.",ja:"彼女は因習打破者として有名だ。",e:"🔨"},
+  {w:"munificent",lv:"formal",ipa:"/mjuːˈnɪfɪsənt/",mean:"気前のよい",en:"A <b>munificent</b> donation saved the school.",ja:"気前のよい寄付が学校を救った。",e:"🎁"},
+  {w:"pernicious",lv:"formal",ipa:"/pərˈnɪʃəs/",mean:"有害な・悪質な",en:"A <b>pernicious</b> rumor spread quickly.",ja:"有害なうわさが素早く広まった。",e:"☠️"},
+  {w:"sagacious",lv:"formal",ipa:"/səˈɡeɪʃəs/",mean:"賢明な・洞察力がある",en:"A <b>sagacious</b> leader plans ahead.",ja:"賢明なリーダーは先を読む。",e:"🦉"},
+  {w:"timorous",lv:"neutral",ipa:"/ˈtɪmərəs/",mean:"おどおどした・臆病な",en:"A <b>timorous</b> voice asked for help.",ja:"おどおどした声が助けを求めた。",e:"🐁"},
+  {w:"verbose",lv:"neutral",ipa:"/vɜːrˈbəʊs/",mean:"言葉が多すぎる・冗長な",en:"The report was far too <b>verbose</b>.",ja:"その報告は冗長すぎた。",e:"📜"},
+  {w:"wistful",lv:"neutral",ipa:"/ˈwɪstfəl/",mean:"もの思わしげな",en:"She gave a <b>wistful</b> smile.",ja:"彼女はもの思わしげにほほ笑んだ。",e:"🌙"},
+  {w:"zealous",lv:"neutral",ipa:"/ˈzeləs/",mean:"熱心な",en:"A <b>zealous</b> fan waited all night.",ja:"熱心なファンが一晩中待った。",e:"🔥"},
+  {w:"pellucid",lv:"formal",ipa:"/pəˈluːsɪd/",mean:"澄み切った・明快な",en:"<b>Pellucid</b> water flowed in the stream.",ja:"澄んだ水が小川を流れた。",e:"💧"},
+  {w:"propensity",lv:"formal",ipa:"/prəˈpensɪti/",mean:"傾向・くせ",en:"He has a <b>propensity</b> for taking risks.",ja:"彼はリスクを好む傾向がある。",e:"🎯"},
+  {w:"ostensible",lv:"formal",ipa:"/ɒsˈtensɪbl/",mean:"表向きの",en:"The <b>ostensible</b> reason was money.",ja:"表向きの理由はお金だった。",e:"🎭"},
+  {w:"inexorable",lv:"formal",ipa:"/ɪnˈeksərəbl/",mean:"止められない・容赦ない",en:"No one can stop the <b>inexorable</b> march of time.",ja:"誰も止められない時の流れ。",e:"⏳"},
+  {w:"equanimity",lv:"formal",ipa:"/ˌekwəˈnɪmɪti/",mean:"平常心・落ち着き",en:"She faced danger with <b>equanimity</b>.",ja:"彼女は危険に平常心で臨んだ。",e:"🧘"},
+  {w:"surreptitious",lv:"formal",ipa:"/ˌsʌrəpˈtɪʃəs/",mean:"こっそりした・内緒の",en:"He took a <b>surreptitious</b> glance at the exam.",ja:"彼は試験でこっそり盗み見た。",e:"🤫"},
+ ],
 };
 Object.values(DATA).forEach(arr=>arr.forEach(d=>{d.learned=false;d.wrong=false;}));
 
 let cur=1;
 function words(){return DATA[cur];}
-function allWords(){return DATA[1].concat(DATA[2]||[],DATA[3]||[]);}
+function allWords(){return DATA[1].concat(DATA[2]||[],DATA[3]||[],DATA[4]||[]);}
 
 /* ---- 発音 ---- */
 let enVoice=null, hintedNoSpeech=false;
@@ -620,7 +654,7 @@ function setLevel(n){
   if(n===2)document.body.classList.add('lv2');
   if(n===3)document.body.classList.add('lv3');
   levelBtns.forEach(b=>b.classList.toggle('active',+b.dataset.level===n));
-  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎'}[n];
+  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆'}[n];
   switchTab('list');curFilter='all';setActiveChip('all');renderList();
 }
 levelBtns.forEach(b=>b.onclick=()=>{sfx.levelup();setLevel(+b.dataset.level);});
@@ -1027,7 +1061,7 @@ function getQuestion(d){
   return {kind:'spell',show:d.mean,small:true,answer:d.w};
 }
 // ==== 敵ロスター(L1相当を基準ステータス、レベルで倍率) ====
-const LVMUL={1:{hp:0.92,st:0.94},2:{hp:1.28,st:1.2},3:{hp:1.55,st:1.35}};
+const LVMUL={1:{hp:0.92,st:0.94},2:{hp:1.28,st:1.2},3:{hp:1.55,st:1.35},4:{hp:1.75,st:1.5}};
 const ENEMY_ROSTER=[
  {key:'slime',name:'スペルスライム',emoji:'🟢',ai:'balanced',hp:210,atk:66,spa:62,def:66,spe:64,
   moves:[{n:'たいあたり',cat:'物理',pow:50},{n:'スペルショット',cat:'特殊',pow:55},{n:'からみつく',cat:'へんか',target:'enemy',stat:'spe',stage:-1},{n:'れんぞくパンチ',cat:'物理',pow:30,hits:2}]},
