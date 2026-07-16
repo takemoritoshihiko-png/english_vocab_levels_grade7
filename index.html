@@ -227,6 +227,63 @@
   .tmini.rm{background:#fde2e2;color:#c0392b}
   .hidden{display:none}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ===== v3 バトル演出リッチ化 ===== */
+  .battle{background:linear-gradient(170deg,#232a55 0%,#3a3f86 45%,#5b3fa0 100%)!important;color:#fff;position:relative}
+  .battle::before{content:"";position:absolute;inset:0;border-radius:22px;background:radial-gradient(circle at 72% 12%,rgba(255,255,255,.14),transparent 42%),radial-gradient(circle at 18% 88%,rgba(120,180,255,.12),transparent 40%);pointer-events:none;z-index:0}
+  #btPlay,.bt-top,.bt-result{position:relative;z-index:1}
+  .bt-top .ttl{color:#fff}
+  .bt-close{background:rgba(255,255,255,.18)!important;color:#fff!important}
+  .bt-enemy{margin:2px 0 14px}
+  .bt-enemy .mon{font-size:88px!important;filter:drop-shadow(0 10px 12px rgba(0,0,0,.45));animation:idlefloat 3s ease-in-out infinite;display:inline-block;position:relative;z-index:2}
+  .bt-enemy .mon::after{content:"";position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);width:88px;height:18px;background:radial-gradient(ellipse,rgba(0,0,0,.4),transparent 70%);z-index:-1}
+  .bt-enemy .nm{color:#fff;font-size:17px!important;text-shadow:0 2px 4px rgba(0,0,0,.4)}
+  .bt-enemy .nm small{color:rgba(255,255,255,.72)!important}
+  @keyframes idlefloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .hpbar,.bt-hpwrap{height:20px!important;border-radius:12px!important;background:rgba(0,0,0,.4)!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.5);border:1.5px solid rgba(255,255,255,.28)!important}
+  .hpbar i,.bt-hpwrap i{border-radius:12px;transition:width .55s cubic-bezier(.2,.9,.3,1)!important}
+  .hpbar span{color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.7);font-size:11px!important}
+  .bt-you{background:rgba(255,255,255,.12);border-radius:18px;padding:11px;margin-top:12px}
+  .you-name{color:#fff;font-size:16px!important}
+  .avatar-lg{width:76px!important;height:76px!important;border-radius:18px!important;box-shadow:0 8px 18px rgba(0,0,0,.45);border:2.5px solid rgba(255,255,255,.35)}
+  .bt-log{color:rgba(255,255,255,.92)!important;font-size:14px}
+  .stagerow{color:#ffe27a;font-size:11px;font-weight:800;min-height:14px}
+  .team-dots .tdot{border-color:rgba(255,255,255,.4)}
+  .bt-meta,.bt-q{color:#fff}
+  .bt-fb{color:#fff!important;font-size:14px;background:rgba(0,0,0,.22);border-radius:12px;padding:8px 10px;line-height:1.7}
+  .bt-fb.ok{box-shadow:inset 0 0 0 2px rgba(80,230,120,.5)}
+  .bt-fb.ng{box-shadow:inset 0 0 0 2px rgba(255,90,90,.5)}
+  .bt-show{color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .move{background:linear-gradient(180deg,#ffffff,#eaeefb)!important;color:var(--ink)!important;box-shadow:0 4px 0 rgba(30,20,70,.28),0 7px 16px rgba(0,0,0,.28)!important;border-radius:14px!important}
+  .move:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(30,20,70,.28)!important}
+  .move.phys{background:linear-gradient(180deg,#fff,#ffe4de)!important}
+  .move.spec{background:linear-gradient(180deg,#fff,#e2ecff)!important}
+  .move.stat{background:linear-gradient(180deg,#fff,#eef1f6)!important}
+  .bt-opt{box-shadow:0 4px 0 rgba(30,20,70,.2),0 6px 14px rgba(0,0,0,.15)!important}
+  .bt-opt:active:not(:disabled){transform:translateY(3px)}
+  /* エフェクト層 */
+  #fxLayer{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+  .dmg-num{position:fixed;font-family:var(--display);font-weight:800;font-size:32px;color:#ff5a5a;text-shadow:0 2px 5px rgba(0,0,0,.6),0 0 3px #fff;animation:dmgfloat 1s ease-out forwards}
+  .dmg-num.crit{font-size:44px;color:#ffd23f;text-shadow:0 2px 6px rgba(0,0,0,.7),0 0 10px #ff9800}
+  .dmg-num.heal{color:#4be37a}
+  @keyframes dmgfloat{0%{transform:translateY(12px) scale(.4);opacity:0}18%{transform:translateY(-4px) scale(1.25);opacity:1}55%{transform:translateY(-24px) scale(1)}100%{transform:translateY(-52px) scale(.85);opacity:0}}
+  .impact{position:fixed;width:96px;height:96px;transform:translate(-50%,-50%);pointer-events:none;animation:impactpop .42s ease-out forwards}
+  @keyframes impactpop{0%{transform:translate(-50%,-50%) scale(.2);opacity:.95}100%{transform:translate(-50%,-50%) scale(1.7);opacity:0}}
+  .flash{animation:flashhit .35s !important}
+  @keyframes flashhit{0%,100%{filter:none}25%,55%{filter:brightness(2.6) drop-shadow(0 0 14px #fff)}}
+  .flash-heal{animation:flashheal .5s !important}
+  @keyframes flashheal{0%,100%{filter:none}40%{filter:brightness(1.4) drop-shadow(0 0 12px #4be37a)}}
+  .lunge-up{animation:lungeU .42s !important}
+  @keyframes lungeU{0%,100%{transform:translateY(0)}42%{transform:translateY(-16px) scale(1.08)}}
+  .lunge-down{animation:lungeD .42s !important}
+  @keyframes lungeD{0%,100%{transform:translateY(0)}42%{transform:translateY(16px) scale(1.08)}}
+  .battle.shake{animation:shk .44s}
+  .battle.shake.strong{animation:shkS .52s}
+  @keyframes shk{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  @keyframes shkS{0%,100%{transform:none}15%{transform:translate(-11px,4px)}30%{transform:translate(10px,-3px)}45%{transform:translate(-8px,2px)}60%{transform:translate(6px,-2px)}80%{transform:translate(-3px,1px)}}
+  /* 全体の軽い底上げ */
+  .opt{box-shadow:0 3px 0 rgba(31,42,68,.1),0 5px 12px rgba(31,42,68,.08)!important;transition:transform .08s}
+  .opt:active:not(:disabled){transform:translateY(2px)}
 </style>
 </head>
 <body>
@@ -1024,7 +1081,7 @@ function renderGacha(){
 document.getElementById('pullBtn').onclick=doPull;
 
 /* ---- battle (ポケモン風) ---- */
-let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null;
+let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null;
 function misspell(w,n){
   const out=new Set();let tries=0;
   while(out.size<n&&tries<60){
@@ -1173,6 +1230,15 @@ function updateTileAns(q){
     applyResult(ok);
   }
 }
+function ensureFxLayer(){var l=document.getElementById('fxLayer');if(!l){l=document.createElement('div');l.id='fxLayer';var o=document.getElementById('battleOverlay');(o||document.body).appendChild(l);}return l;}
+function elCenter(el){var r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};}
+function fxFloatNum(x,y,text,cls){if(!text)return;var l=ensureFxLayer();var d=document.createElement('div');d.className='dmg-num '+(cls||'');d.textContent=text;d.style.left=x+'px';d.style.top=y+'px';l.appendChild(d);setTimeout(function(){d.remove();},1000);}
+function fxImpact(x,y,color){var l=ensureFxLayer();var d=document.createElement('div');d.className='impact';d.style.left=x+'px';d.style.top=y+'px';d.style.background='radial-gradient(circle,'+color+' 0%,transparent 65%)';l.appendChild(d);setTimeout(function(){d.remove();},420);}
+function battleShake(strong){var b=document.querySelector('.battle');if(!b)return;b.classList.remove('shake','strong');void b.offsetWidth;b.classList.add('shake');if(strong)b.classList.add('strong');setTimeout(function(){b.classList.remove('shake','strong');},strong?520:440);}
+function fxLunge(isPlayer){var el=document.getElementById(isPlayer?'btAvatar':'btMon');if(!el)return;var cls=isPlayer?'lunge-up':'lunge-down';el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(function(){el.classList.remove(cls);},420);}
+function fxHitTarget(tgtEnemy,dmg,crit,cat){var el=document.getElementById(tgtEnemy?'btMon':'btAvatar');if(!el)return;var c=elCenter(el);el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');setTimeout(function(){el.classList.remove('flash');},400);var color=cat==='特殊'?'rgba(96,160,255,.95)':cat==='かいふく'?'rgba(80,230,120,.9)':'rgba(255,120,80,.95)';fxImpact(c.x,c.y,color);fxFloatNum(c.x-12,c.y-26,'-'+dmg,crit?'crit':'');battleShake(crit);}
+function fxHeal(tgtEnemy,amt){var el=document.getElementById(tgtEnemy?'btMon':'btAvatar');if(!el)return;var c=elCenter(el);fxFloatNum(c.x-10,c.y-26,'+'+amt,'heal');el.classList.remove('flash-heal');void el.offsetWidth;el.classList.add('flash-heal');setTimeout(function(){el.classList.remove('flash-heal');},500);}
+function playFxSeq(fx,isPlayer,delay){if(!fx)return;setTimeout(function(){fxLunge(isPlayer);setTimeout(function(){if(fx.dmg>0)fxHitTarget(fx.tgtEnemy,fx.dmg,fx.crit,fx.cat);else if(fx.heal>0)fxHeal(fx.tgtEnemy,fx.heal);},150);},delay);}
 function applyResult(ok){
   const a=active();
   let forgiven=false;
@@ -1187,8 +1253,9 @@ function applyResult(ok){
   const msgs=[];
   if(forgiven)msgs.push('🕵️ サー・モノクルがミスをかばった！');
   msgs.push(playerFirst?`⚡ ${a.c.name}が先攻！`:`⚡ ${enemy.name}が先攻！`);
-  const pAct=()=>{ if(ok){msgs.push(performMove(a,enemy,curMove));} else {sfx.wrong();msgs.push(`${a.c.name}はしくじった…こうげき失敗 💥`);} };
-  const eAct=()=>{ if(skipEnemy){msgs.push('🙃 先制で相手の行動を封じた！');return;} msgs.push(performMove(enemy,a,eMove)); if(a.hp<=0)setTimeout(()=>sfx.faint(),180); };
+  let pFx=null,eFx=null;
+  const pAct=()=>{ if(ok){msgs.push(performMove(a,enemy,curMove));pFx=fxInfo;fxInfo=null;} else {sfx.wrong();msgs.push(`${a.c.name}はしくじった…こうげき失敗 💥`);} };
+  const eAct=()=>{ if(skipEnemy){msgs.push('🙃 先制で相手の行動を封じた！');return;} msgs.push(performMove(enemy,a,eMove));eFx=fxInfo;fxInfo=null; if(a.hp<=0)setTimeout(()=>sfx.faint(),180); };
   if(playerFirst){
     pAct();
     if(enemy.hp>0)eAct(); else msgs.push(`${enemy.name}をたおした！ 🎉`);
@@ -1196,6 +1263,7 @@ function applyResult(ok){
     eAct();
     if(a.hp>0)pAct(); else msgs.push(`${a.c.name}はたおれて動けなかった…`);
   }
+  if(playerFirst){ playFxSeq(pFx,true,0); playFxSeq(eFx,false,600); } else { playFxSeq(eFx,false,0); playFxSeq(pFx,true,600); }
   if(enemy.boss&&enemy.regen&&enemy.hp>0&&enemy.hp<enemy.maxhp){const rh=Math.max(1,Math.round(enemy.maxhp*enemy.regen));enemy.hp=Math.min(enemy.maxhp,enemy.hp+rh);msgs.push(`👑 ${enemy.name}はHPを${rh}回復した`);}
   if(a.id==='c10'&&a.hp>0){a.spaMult=(a.spaMult||1)*1.1;msgs.push('📈 クーパーの「勤勉」！特がぐんぐん上がる ▲');}
   if(a.c.forms){var nf=(a.hp<a.maxhp/2)?'dog':'ghost';if(a._form&&a._form!==nf)msgs.push(nf==='dog'?'🐕 HP半分以下！ドッグにチェンジ！攻撃がぐっと上がった':'👻 ワイトにチェンジ！素早く硬くなった');a._form=nf;}
@@ -1236,7 +1304,7 @@ function movePriority(att,move){
 function performMove(att,def,move){
   const nm=bName(att);
   // 回復技(先に判定)
-  if(move.heal){const h=Math.max(1,Math.round(att.maxhp*move.heal));att.hp=Math.min(att.maxhp,att.hp+h);sfx.buff();return `${nm}の「${move.n}」！ HPが${h}回復した 💚`;}
+  if(move.heal){const h=Math.max(1,Math.round(att.maxhp*move.heal));att.hp=Math.min(att.maxhp,att.hp+h);fxInfo={heal:h,tgtEnemy:!att.c,dmg:0};sfx.buff();return `${nm}の「${move.n}」！ HPが${h}回復した 💚`;}
   // 能力変化技
   if(move.cat==='へんか'){
     const sj=STATJP[move.stat]||move.stat;
@@ -1260,6 +1328,7 @@ function performMove(att,def,move){
     total+=Math.max(1,dmg);
   }
   def.hp-=total;
+  fxInfo={dmg:total,crit:critAny,cat:cat,tgtEnemy:!def.c,heal:0};
   if(critAny)sfx.crit(); else if(att.c)sfx.hit(); else sfx.enemyHit();
   let msg=`${nm}の「${move.n}」！ ${total}ダメージ ⚔️`+(critAny?' きゅうしょ！💥':'')+(hits>1?`（${hits}回ヒット！）`:'');
   if(att.c&&att.id==='c9'&&att.hp<=att.maxhp/2)msg+=' 🔥';
