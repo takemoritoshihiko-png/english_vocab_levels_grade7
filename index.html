@@ -128,7 +128,7 @@
   .fight{border:none;background:var(--primary);color:#fff;font-family:var(--display);font-weight:700;font-size:12px;padding:6px 9px;border-radius:13px;cursor:pointer;white-space:nowrap;min-width:54px;box-shadow:0 3px 0 var(--primary-dk)}
   .fight:active{transform:translateY(1px)}
   /* battle */
-  .overlay{position:fixed;inset:0;background:rgba(20,25,45,.55);display:flex;align-items:center;justify-content:center;padding:10px;z-index:50}
+  .overlay{position:fixed;inset:0;background:rgba(14,18,34,.99);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:10px;z-index:50}
   .battle{background:var(--card);border-radius:22px;box-shadow:var(--shadow-lg);width:100%;max-width:600px;max-height:96vh;overflow:auto;padding:22px}
   .bt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .bt-top .ttl{font-family:var(--display);font-weight:700;font-size:16px}
@@ -1354,7 +1354,7 @@ function chooseEnemyMove(enemy,target){
 function finishBattle(win){
   document.getElementById('btPlay').classList.add('hidden');
   document.getElementById('btResult').classList.remove('hidden');
-  let reward=win?(25+cur*12+((enemy&&enemy.boss)?40:0)+(team.includes('c3')?5:0)):5;
+  let reward=win?((enemy&&enemy.boss)?90:(25+cur*12))+(team.includes('c3')?5:0):5;
   if(win)battleWord.learned=true;
   coins+=reward;updateCoins();
   if(win)sfx.win(); else sfx.lose();
