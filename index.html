@@ -986,7 +986,7 @@ const CHARS=[
   moves:[{n:'かまふり',cat:'物理',pow:55},{n:'ふうせんばくだん',cat:'特殊',pow:60,eff:{stat:'spe',stage:-1,target:'enemy',chance:0.3}},{n:'どろかけ',cat:'へんか',target:'enemy',stat:'spe',stage:-1},{n:'しゅうかく',cat:'物理',pow:50,drain:0.5},{n:'まもりかため',cat:'へんか',target:'self',stat:'def',stage:2}]},
  {id:'c6',name:'ホースカー',emoji:'🐎',img:IMG.c6,trait:'開始時に相手の攻撃力ダウン',hp:70,atk:85,spa:50,def:55,spe:80,
   moves:[{n:'アクセルタックル',cat:'物理',pow:45,pri:true},{n:'ドーナツドリフト',cat:'物理',pow:35,hits:2},{n:'クラクション',cat:'へんか',target:'enemy',stat:'atk',stage:-1},{n:'ばりきエンジン',cat:'物理',pow:75,recoil:0.2},{n:'オイルスモーク',cat:'へんか',target:'enemy',stat:'spe',stage:-1}]},
- {id:'c7',name:'アクロバット・ガン',emoji:'🙃',img:IMG.c7,trait:'能力ダウン技は先制＆その番は反撃なし',hp:65,atk:60,spa:80,def:55,spe:80,
+ {id:'c7',name:'アクロバット・ガン',emoji:'🙃',img:IMG.c7,trait:'能力を下げる技を先制で撃てる',hp:65,atk:60,spa:80,def:55,spe:80,
   moves:[{n:'さかだちキック',cat:'物理',pow:50},{n:'トリックショット',cat:'特殊',pow:60,hicrit:true},{n:'めくらまし',cat:'へんか',target:'enemy',stat:'def',stage:-2},{n:'スパイクトス',cat:'特殊',pow:55},{n:'かくらん',cat:'へんか',target:'enemy',stat:'atk',stage:-2}]},
  {id:'c8',name:'オクトパンチ',emoji:'🐙',img:IMG.c8,trait:'物理技のダメージ1.5倍',hp:80,atk:100,spa:40,def:70,spe:50,
   moves:[{n:'ジャブ',cat:'物理',pow:40,pri:true},{n:'タコフック',cat:'物理',pow:60},{n:'すみはき',cat:'特殊',pow:50,eff:{stat:'spe',stage:-1,target:'enemy',chance:0.3}},{n:'きんにくアップ',cat:'へんか',target:'self',stat:'atk',stage:2},{n:'オクトアッパー',cat:'物理',pow:75}]},
@@ -1251,7 +1251,7 @@ function applyResult(ok){
   if(a.id==='c11')playerFirst=false;
   else if(pPri!==ePri)playerFirst=pPri>ePri;
   else playerFirst=eStat(rawSpeStat(a),a.stages.spe)>=eStat(rawSpeStat(enemy),enemy.stages.spe);
-  const skipEnemy=(curMove.cat==='へんか'&&a.id==='c7');
+  const skipEnemy=false;
   const msgs=[];
   if(forgiven)msgs.push('🕵️ サー・モノクルがミスをかばった！');
   msgs.push(playerFirst?`⚡ ${a.c.name}が先攻！`:`⚡ ${enemy.name}が先攻！`);
