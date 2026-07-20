@@ -291,6 +291,11 @@
   .opt{box-shadow:0 3px 0 rgba(31,42,68,.1),0 5px 12px rgba(31,42,68,.08)!important;transition:transform .08s}
   .opt:active:not(:disabled){transform:translateY(2px)}
   .bt-enemy .mon img{width:168px;height:168px;object-fit:contain;filter:drop-shadow(0 12px 10px rgba(0,0,0,.55));display:block}
+  /* バトル中ポップアップ(技説明/ステータス) */
+  #btPopup{position:absolute;inset:0;background:rgba(6,8,20,.78);display:flex;align-items:center;justify-content:center;z-index:80;border-radius:22px;padding:16px}
+  .bt-pop-card{background:linear-gradient(160deg,#2b2350,#3d3277);color:#fff;border:1.5px solid rgba(255,255,255,.25);border-radius:18px;padding:18px 20px;max-width:340px;width:100%;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+  .bt-pop-x{margin-top:14px;width:100%;border:none;border-radius:12px;padding:10px;font-weight:800;font-size:14px;cursor:pointer;background:linear-gradient(90deg,#f59e0b,#ef4444);color:#fff}
+  .move{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 </style>
 </head>
 <body>
@@ -1205,6 +1210,43 @@ function renderBattle(){
   const dots=document.getElementById('btTeamDots');dots.innerHTML='';
   teamState.forEach((t,i)=>{const el=document.createElement('div');el.className='tdot'+(i===activeIdx?' cur':'')+(t.hp<=0?' dead':'');el.innerHTML=avatarHTML(t.c,'tav');dots.appendChild(el);});
 }
+var SJ={atk:'こうげき',def:'ぼうぎょ',spa:'とくこう',spe:'すばやさ'};
+function moveDesc(m){
+  var cn={'物理':'物理わざ','特殊':'特殊わざ','へんか':'変化わざ','かいふく':'回復わざ'}[m.cat]||m.cat;
+  var L=['<div style="font-size:16px;font-weight:800;color:#ffd23f;margin-bottom:6px">'+m.n+' <span style="font-size:12px;color:#cfe0ff">'+cn+(m.pow?' 威力'+m.pow:'')+'</span></div>'];
+  if(m.cat==='物理')L.push('こうげき力でダメージを計算する');
+  if(m.cat==='特殊')L.push('とくこう力でダメージを計算する');
+  if(m.heal)L.push('自分のHPを最大の'+Math.round(m.heal*100)+'%回復する');
+  if(m.cat==='へんか'){var sj=SJ[m.stat]||m.stat;if(m.target==='self')L.push('自分の'+sj+'を'+Math.abs(m.stage)+'段階'+(m.stage>0?'上げる ▲':'下げる ▼'));else L.push('相手の'+sj+'を'+Math.abs(m.stage)+'段階'+(m.stage<0?'下げる ▼':'上げる ▲'));}
+  if(m.pri)L.push('⚡ 先制：すばやさに関係なく先に動ける');
+  if(m.hits)L.push('🔁 '+m.hits+'回れんぞくでヒットする');
+  if(m.drain)L.push('🩸 あたえたダメージの'+Math.round(m.drain*100)+'%を吸収して回復');
+  if(m.recoil)L.push('💢 自分も'+Math.round(m.recoil*100)+'%の反動ダメージを受ける');
+  if(m.hicrit)L.push('💥 急所（きゅうしょ）に当たりやすい');
+  if(m.eff){var sj2=SJ[m.eff.stat]||m.eff.stat;L.push('✨ '+Math.round((m.eff.chance||1)*100)+'%で'+(m.eff.target==='self'?'自分':'相手')+'の'+sj2+'を'+Math.abs(m.eff.stage)+'段階'+(m.eff.stage>0?'上げる ▲':'下げる ▼'));}
+  return L[0]+'<div style="font-size:13px;line-height:1.9">'+L.slice(1).map(function(x){return '・'+x;}).join('<br>')+'</div>';
+}
+function closeBtPopup(){var el=document.getElementById('btPopup');if(el)el.remove();}
+function showBtPopup(html){
+  closeBtPopup();
+  var ov=document.createElement('div');ov.id='btPopup';
+  ov.innerHTML='<div class="bt-pop-card">'+html+'<button class="bt-pop-x">とじる</button></div>';
+  ov.addEventListener('click',function(e){if(e.target===ov||e.target.className==='bt-pop-x')closeBtPopup();});
+  (document.querySelector('.battle')||document.body).appendChild(ov);
+}
+function statRow(label,base,stage){
+  stage=stage||0;var eff=Math.round(eStat(base,stage));
+  var arr=stage>0?' <span style="color:#7dffa0">▲'+stage+'</span>':stage<0?' <span style="color:#ff8a8a">▼'+(-stage)+'</span>':'';
+  return '<div style="display:flex;justify-content:space-between;padding:1px 0"><span>'+label+'</span><span><b>'+eff+'</b>'+arr+'</span></div>';
+}
+function showStatsPanel(){
+  var a=active();
+  var h='<div style="font-weight:800;color:#ff8a8a;margin-bottom:2px">🟥 あいて：'+enemy.name+'</div>';
+  h+='<div style="font-size:14px;line-height:1.6;margin-bottom:10px">HP '+Math.max(0,enemy.hp)+' / '+enemy.maxhp+statRow('こうげき',enemy.atk,enemy.stages.atk)+statRow('とくこう',enemy.spa!=null?enemy.spa:enemy.atk,enemy.stages.spa)+statRow('ぼうぎょ',enemy.def,enemy.stages.def)+statRow('すばやさ',enemy.spe,enemy.stages.spe)+'</div>';
+  h+='<div style="font-weight:800;color:#7db9ff;margin-bottom:2px">🟦 じぶん：'+a.c.name+'</div>';
+  h+='<div style="font-size:14px;line-height:1.6">HP '+Math.max(0,a.hp)+' / '+a.maxhp+statRow('こうげき',formStat(a,'atk'),a.stages.atk)+statRow('とくこう',formStat(a,'spa'),a.stages.spa)+statRow('ぼうぎょ',formStat(a,'def'),a.stages.def)+statRow('すばやさ',formStat(a,'spe'),a.stages.spe)+'</div>';
+  showBtPopup(h);
+}
 function renderMoves(){
   document.getElementById('btFb').textContent='';document.getElementById('btFb').className='bt-fb';
   document.getElementById('btLog').textContent='技をえらんでこうげき！';
@@ -1214,13 +1256,29 @@ function renderMoves(){
     const b=document.createElement('button');b.className='move '+({'物理':'phys','特殊':'spec','へんか':'stat','かいふく':'stat'}[m.cat]||'stat');
     const tags=[];if(m.pri)tags.push('先制');if(m.hits)tags.push(m.hits+'回');if(m.drain)tags.push('吸収');if(m.heal)tags.push('回復');if(m.recoil)tags.push('反動');if(m.hicrit)tags.push('急所↑');if(m.eff)tags.push('効果');
     b.innerHTML=`<span class="mn">${m.n}</span><span class="mc">${m.cat}${m.pow?' '+m.pow:''}${tags.length?' ・'+tags.join('/'):''}</span>`;
-    b.onclick=()=>askQuestion(m);
+    let lp=false,lpT=null;
+    const startLP=()=>{lp=false;lpT=setTimeout(()=>{lp=true;showBtPopup(moveDesc(m));},420);};
+    const cancelLP=()=>{if(lpT)clearTimeout(lpT);};
+    b.addEventListener('pointerdown',startLP);
+    b.addEventListener('pointerup',cancelLP);
+    b.addEventListener('pointerleave',cancelLP);
+    b.addEventListener('contextmenu',e=>{e.preventDefault();lp=true;showBtPopup(moveDesc(m));});
+    b.onclick=()=>{ if(lp){lp=false;return;} askQuestion(m); };
     wrap.appendChild(b);
   });
   area.appendChild(wrap);
+  const sBtn=document.createElement('button');
+  sBtn.textContent='📊 ステータスを見る';
+  sBtn.style.cssText='display:block;margin:10px auto 0;border:none;border-radius:12px;padding:9px 18px;font-weight:800;font-size:13px;cursor:pointer;background:rgba(255,255,255,.16);color:#fff;';
+  sBtn.onclick=showStatsPanel;
+  area.appendChild(sBtn);
+  const hint=document.createElement('div');
+  hint.textContent='※ 技を長おしすると くわしい説明が見れるよ';
+  hint.style.cssText='text-align:center;color:rgba(255,255,255,.6);font-size:11px;margin-top:6px;';
+  area.appendChild(hint);
 }
 function askQuestion(m){
-  curMove=m;curQ=getQuestion(mysteryCard?rnd(mysteryPool):battleWord);
+  closeBtPopup();curMove=m;curQ=getQuestion(mysteryCard?rnd(mysteryPool):battleWord);
   document.getElementById('btLog').textContent=`「${m.n}」！ クイズに正解でヒット！`;
   document.getElementById('btFb').textContent='';document.getElementById('btFb').className='bt-fb';
   const area=document.getElementById('btArea');area.innerHTML='';
