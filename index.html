@@ -316,7 +316,6 @@
     <button class="tab active" data-tab="list">📖 一覧</button>
     <button class="tab" data-tab="quiz">🎯 クイズ</button>
     <button class="tab" data-tab="review">❌ 復習</button>
-    <button class="tab" data-tab="shop">🛒 ショップ</button>
     <button class="tab" data-tab="gacha">🎁 ガチャ</button>
   </div>
 
@@ -354,17 +353,6 @@
       <div class="earned" id="rEarned"></div>
       <button class="btn btn-primary" id="retry">🔁 もう一回</button>
     </div>
-  </section>
-
-  <section id="shop" class="hidden">
-    <div class="shop-bal">🪙 <b id="shopBal">0</b> コイン</div>
-    <div class="shop-note">クイズで1問正解＝1コイン（全問正解でボーナス＋5）</div>
-    <div class="shop-h">🖼️ 背景</div>
-    <div class="shop-grid" id="shopBgs"></div>
-    <div class="shop-h">🔲 単語の枠</div>
-    <div class="shop-grid" id="shopFrames"></div>
-    <div class="shop-h">⚔️ バトル背景</div>
-    <div class="shop-grid" id="shopBBgs"></div>
   </section>
 
   <section id="gacha" class="hidden">
@@ -724,7 +712,7 @@ levelBtns.forEach(b=>b.onclick=()=>{sfx.levelup();setLevel(+b.dataset.level);});
 
 /* ---- tabs ---- */
 const tabs=document.querySelectorAll('.tab');
-const sec={list:document.getElementById('list'),quiz:document.getElementById('quiz'),review:document.getElementById('review'),shop:document.getElementById('shop'),gacha:document.getElementById('gacha')};
+const sec={list:document.getElementById('list'),quiz:document.getElementById('quiz'),review:document.getElementById('review'),gacha:document.getElementById('gacha')};
 function switchTab(name){
   tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
   Object.entries(sec).forEach(([k,s])=>s.classList.toggle('hidden',k!==name));
@@ -733,7 +721,6 @@ tabs.forEach(t=>t.addEventListener('click',()=>{
   switchTab(t.dataset.tab);
   if(t.dataset.tab==='quiz')startQuiz('all');
   else if(t.dataset.tab==='review')renderReview();
-  else if(t.dataset.tab==='shop')renderShop();
   else if(t.dataset.tab==='gacha')renderGacha();
   else renderList();
 }));
