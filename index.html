@@ -54,6 +54,11 @@
   .word-card{background:var(--card);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow);display:flex;gap:13px;align-items:flex-start;border-left:6px solid var(--neutral);transition:opacity .2s,background .2s}
   .word-card.formal{border-left-color:var(--formal)}
   .word-card.learned{background:#F2FBF5;opacity:.74}
+  .word-card.mystery{background:linear-gradient(135deg,#2b2350,#43307a);color:#fff;border-left:5px solid #f59e0b}
+  .word-card.mystery .wc-word{color:#ffd23f;letter-spacing:3px}
+  .word-card.mystery .wc-mean{color:#e9e4ff}
+  .word-card.mystery.learned{opacity:.6}
+  .word-card.mystery .emoji{color:#ffd23f}
   .emoji{font-size:34px;width:42px;text-align:center;flex-shrink:0}
   .wc-body{flex:1;min-width:0}
   .wc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -589,7 +594,8 @@ const DATA={
 };
 Object.values(DATA).forEach(arr=>arr.forEach(d=>{d.learned=false;d.wrong=false;}));
 // レベル5(総復習):全120語の独立コピー。覚えた/復習フラグはL1-4とは別管理
-DATA[5]=allWords().map(d=>Object.assign({},d,{learned:false,wrong:false}));
+// レベル5(総復習)=40個のミステリーバトル。1バトルで3単語がランダムに出る。中身は全部?
+DATA[5]=Array.from({length:40},()=>({w:'???',mystery:true,lv:'neutral',e:'❓',ipa:'',mean:'',en:'',ja:'',learned:false,wrong:false}));
 
 let cur=1;
 function words(){return DATA[cur];}
@@ -704,7 +710,7 @@ function setLevel(n){
   if(n===2)document.body.classList.add('lv2');
   if(n===3)document.body.classList.add('lv3');
   levelBtns.forEach(b=>b.classList.toggle('active',+b.dataset.level===n));
-  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',5:'レベル5：総ふくしゅう！120語 ⭐'}[n];
+  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',5:'レベル5：総ふくしゅう！40のミステリーバトル ⭐'}[n];
   if(n===5)shuffle(DATA[5]); // 総復習は毎回ランダム順
   switchTab('list');curFilter='all';setActiveChip('all');renderList();
 }
@@ -728,6 +734,20 @@ tabs.forEach(t=>t.addEventListener('click',()=>{
 /* ---- card ---- */
 function makeCard(d){
   const c=document.createElement('div');
+  if(d.mystery){
+    c.className='word-card mystery'+(d.learned?' learned':'');
+    c.innerHTML=`<div class="emoji">❓</div>
+      <div class="wc-body">
+        <div class="wc-top"><span class="wc-word">？？？</span><span class="badge neutral">MYSTERY</span></div>
+        <div class="wc-mean">3つの単語がランダムで出る ミステリーバトル！</div>
+      </div>
+      <div class="card-actions">
+        <button class="mark${d.learned?' on':''}" disabled>${d.learned?'✓ クリア':'未クリア'}</button>
+        <button class="fight">⚔️ 挑戦</button>
+      </div>`;
+    c.querySelector('.fight').addEventListener('click',e=>{e.stopPropagation();openBattle(d);});
+    return c;
+  }
   c.className='word-card '+d.lv+(d.learned?' learned':'')+frameClass();
   c.innerHTML=`<div class="emoji">${d.e}</div>
     <div class="wc-body">
@@ -779,9 +799,10 @@ document.getElementById('unlearnedQuiz').onclick=()=>{
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 let qs=[],qi=0,score=0,quizMode='all';
 function poolFor(mode){
-  if(mode==='review')return words().filter(d=>d.wrong);
-  if(mode==='unlearned')return words().filter(d=>!d.learned);
-  return [...words()];
+  const src=(cur===5)?allWords():words();
+  if(mode==='review')return src.filter(d=>d.wrong);
+  if(mode==='unlearned')return src.filter(d=>!d.learned);
+  return [...src];
 }
 function startQuiz(mode='all'){
   quizMode=mode;
@@ -1086,7 +1107,7 @@ function renderGacha(){
 document.getElementById('pullBtn').onclick=doPull;
 
 /* ---- battle (ポケモン風) ---- */
-let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null;
+let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null,mysteryCard=null,mysteryPool=[];
 function misspell(w,n){
   const out=new Set();let tries=0;
   while(out.size<n&&tries<60){
@@ -1156,7 +1177,9 @@ function eStat(base,stage){return base*stageMul(stage);}
 function stageText(st){const m={atk:'攻',def:'防',spa:'特',spe:'速'};const parts=Object.keys(m).filter(k=>st[k]).map(k=>`${m[k]}${st[k]>0?'▲':'▼'}${Math.abs(st[k])}`);return parts.join(' ');}
 function openBattle(d){
   if(team.length===0){alert('先に「🎁 ガチャ」タブでチームをえらんでね');switchTab('gacha');renderGacha();return;}
-  battleWord=d;enemy=enemyFor();
+  if(d&&d.mystery){mysteryCard=d;mysteryPool=shuffle(allWords().slice()).slice(0,3);battleWord=mysteryPool[0];}
+  else{mysteryCard=null;mysteryPool=[];battleWord=d;}
+  enemy=enemyFor();
   teamState=team.map(id=>{const c=getChar(id);return {id,c,hp:c.hp*2,maxhp:c.hp*2,spaMult:1,stages:{atk:0,spa:0,def:0,spe:0}};});
   activeIdx=0;
   forgiveLeft=team.includes('c2')?1:0;hintLeft=team.includes('c2')?1:0;
@@ -1197,7 +1220,7 @@ function renderMoves(){
   area.appendChild(wrap);
 }
 function askQuestion(m){
-  curMove=m;curQ=getQuestion(battleWord);
+  curMove=m;curQ=getQuestion(mysteryCard?rnd(mysteryPool):battleWord);
   document.getElementById('btLog').textContent=`「${m.n}」！ クイズに正解でヒット！`;
   document.getElementById('btFb').textContent='';document.getElementById('btFb').className='bt-fb';
   const area=document.getElementById('btArea');area.innerHTML='';
@@ -1370,12 +1393,12 @@ function finishBattle(win){
   const rlv=(cur===5)?1:cur;
   let reward=win?((enemy&&enemy.boss)?90:(25+rlv*12))+(team.includes('c3')?5:0)+(win&&window.__mobKO?20:0):5;
   window.__mobKO=false;
-  if(win)battleWord.learned=true;
+  if(win){ if(mysteryCard)mysteryCard.learned=true; else battleWord.learned=true; }
   coins+=reward;updateCoins();
   if(win)sfx.win(); else sfx.lose();
   document.getElementById('btrEmoji').textContent=win?'🏆':'💀';
   document.getElementById('btrTitle').textContent=win?'クリア！':'ゲームオーバー';
-  document.getElementById('btrMsg').innerHTML=win?`番人「${enemy.name}」をたおした！<b>${battleWord.w}</b> を「覚えた」にしたよ ✓`+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
+  document.getElementById('btrMsg').innerHTML=win?(mysteryCard?`⭐ ミステリーバトル クリア！ 3つの単語をマスターした！`:`番人「${enemy.name}」をたおした！<b>${battleWord.w}</b> を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
   document.getElementById('btrReward').textContent=`＋${reward} 🪙`;
 }
 document.getElementById('btRetry').onclick=()=>openBattle(battleWord);
@@ -1390,7 +1413,7 @@ function saveState(){
   try{
     const learned={},wrong={};
     [DATA[1],DATA[2],DATA[3],DATA[4]].forEach(arr=>arr.forEach(d=>{if(d.learned)learned[d.w]=1;if(d.wrong)wrong[d.w]=1;}));
-    const lv5=(DATA[5]||[]).filter(d=>d.learned).map(d=>d.w);
+    const lv5=(DATA[5]||[]).filter(d=>d.learned).length;
     localStorage.setItem(SAVE_KEY,JSON.stringify({
       v:1, coins, team, cur, bgmWanted, lv5,
       ownedChars:[...ownedChars],
@@ -1414,7 +1437,7 @@ function loadState(){
     if(d.owned)['bg','frame','bbg'].forEach(k=>{owned[k].clear();owned[k].add('default');(d.owned[k]||[]).forEach(x=>owned[k].add(x));});
     if(d.equipped)['bg','frame','bbg'].forEach(k=>{if(d.equipped[k])equipped[k]=d.equipped[k];});
     [DATA[1],DATA[2],DATA[3],DATA[4]].forEach(arr=>arr.forEach(x=>{x.learned=!!(d.learned&&d.learned[x.w]);x.wrong=!!(d.wrong&&d.wrong[x.w]);}));
-    var lv5set=new Set(d.lv5||[]);(DATA[5]||[]).forEach(x=>{x.learned=lv5set.has(x.w);x.wrong=false;});
+    var lv5n=d.lv5||0;(DATA[5]||[]).forEach((x,i)=>{x.learned=i<lv5n;x.wrong=false;});
     if(d.cur&&DATA[d.cur])cur=d.cur;
     return true;
   }catch(e){return false;}
