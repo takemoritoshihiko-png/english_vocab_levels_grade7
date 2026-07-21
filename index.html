@@ -33,6 +33,7 @@
   .lvbtn[data-level="3"].active{background:var(--lv3);border-color:var(--lv3);color:#fff}
   .lvbtn[data-level="4"].active{background:#7c3aed;border-color:#7c3aed;color:#fff}
   .lvbtn[data-level="5"].active{background:linear-gradient(90deg,#f59e0b,#ef4444);border-color:#ef4444;color:#fff}
+  .lvbtn[data-level="6"].active,.lvbtn[data-level="7"].active,.lvbtn[data-level="8"].active{background:#0ea5e9;border-color:#0ea5e9;color:#fff}
 
   .legend{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
   .leg{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:14px;padding:7px 12px;box-shadow:var(--shadow);font-size:12px;font-weight:700;color:var(--muted)}
@@ -59,6 +60,9 @@
   .word-card.mystery .wc-mean{color:#e9e4ff}
   .word-card.mystery.learned{opacity:.6}
   .word-card.mystery .emoji{color:#ffd23f}
+  .word-card.grammar{border-left:5px solid #0ea5e9}
+  .word-card.grammar .wc-ex{font-weight:700;color:var(--ink);border:none;padding:0}
+  .word-card.grammar.learned{opacity:.65}
   .emoji{font-size:34px;width:42px;text-align:center;flex-shrink:0}
   .wc-body{flex:1;min-width:0}
   .wc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -315,6 +319,9 @@
     <button class="lvbtn" data-level="3">レベル3 👑</button>
     <button class="lvbtn" data-level="4">レベル4 🏆</button>
     <button class="lvbtn" data-level="5">レベル5 ⭐総ふくしゅう</button>
+    <button class="lvbtn" data-level="6">📝文法1</button>
+    <button class="lvbtn" data-level="7">📝文法2</button>
+    <button class="lvbtn" data-level="8">📝文法3</button>
   </div>
 
   <div class="legend">
@@ -601,6 +608,11 @@ Object.values(DATA).forEach(arr=>arr.forEach(d=>{d.learned=false;d.wrong=false;}
 // レベル5(総復習):全120語の独立コピー。覚えた/復習フラグはL1-4とは別管理
 // レベル5(総復習)=40個のミステリーバトル。1バトルで3単語がランダムに出る。中身は全部?
 DATA[5]=Array.from({length:40},()=>({w:'???',mystery:true,lv:'neutral',e:'❓',ipa:'',mean:'',en:'',ja:'',learned:false,wrong:false}));
+// 文法モード(中級〜上級) 3レベル×30問
+DATA[6]=[{"id": "g1-1", "grammar": true, "t": "時制変換", "q": "『She writes a letter.』を <b>過去形</b>にすると？", "o": ["She wrote a letter.", "She writed a letter.", "She was write a letter.", "She has write a letter."], "a": "She wrote a letter.", "exp": "write の過去形は wrote（不規則動詞）。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-2", "grammar": true, "t": "空所補充", "q": "I have lived here ( ) 2010.「2010年から住んでいる」", "o": ["since", "for", "from", "in"], "a": "since", "exp": "since＋起点。for は期間（for 5 years）。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-3", "grammar": true, "t": "前置詞", "q": "I'm good ( ) math.", "o": ["at", "in", "on", "with"], "a": "at", "exp": "be good at ～：～が得意。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-4", "grammar": true, "t": "冠詞", "q": "She is ( ) honest person.", "o": ["an", "a", "the", "(なし)"], "a": "an", "exp": "honest は発音が母音で始まる→ an。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-5", "grammar": true, "t": "比較", "q": "This one is ( ) than that one.", "o": ["better", "gooder", "more good", "best"], "a": "better", "exp": "good の比較級は better。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-6", "grammar": true, "t": "関係詞", "q": "The man ( ) lives next door is a doctor.", "o": ["who", "which", "what", "whose"], "a": "who", "exp": "人が先行詞で主格→ who。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-7", "grammar": true, "t": "動名詞", "q": "I enjoy ( ) books.", "o": ["reading", "to read", "read", "to reading"], "a": "reading", "exp": "enjoy は動名詞(-ing)をとる。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-8", "grammar": true, "t": "助動詞", "q": "You ( ) see a doctor.「診てもらった方がいい」", "o": ["should", "would", "could", "may"], "a": "should", "exp": "should：～すべき・した方がいい。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-9", "grammar": true, "t": "受動態", "q": "This book ( ) by many people.", "o": ["is read", "reads", "is reading", "read"], "a": "is read", "exp": "受動態は be＋過去分詞。read の過去分詞は read。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-10", "grammar": true, "t": "条件文", "q": "If it ( ) tomorrow, we'll stay home.", "o": ["rains", "will rain", "rained", "is going rain"], "a": "rains", "exp": "条件の if 節は未来でも現在形。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-11", "grammar": true, "t": "使役", "q": "My mom ( ) me clean my room.", "o": ["made", "let me to", "made to", "makes to"], "a": "made", "exp": "make＋人＋動詞の原形。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-12", "grammar": true, "t": "間接疑問", "q": "Do you know ( )?", "o": ["where he is", "where is he", "where he is?", "he where is"], "a": "where he is", "exp": "間接疑問は〈疑問詞＋主語＋動詞〉の語順。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-13", "grammar": true, "t": "付加疑問", "q": "You're tired, ( )?", "o": ["aren't you", "are you", "don't you", "isn't it"], "a": "aren't you", "exp": "are の否定＋主語→ aren't you。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-14", "grammar": true, "t": "数量", "q": "I don't have ( ) money.", "o": ["any", "some", "no any", "many"], "a": "any", "exp": "否定文では any。money は不可算で many は不可。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-15", "grammar": true, "t": "数量", "q": "How ( ) water do you drink?", "o": ["much", "many", "few", "a lot"], "a": "much", "exp": "water は不可算→ much。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-16", "grammar": true, "t": "前置詞", "q": "I've known him ( ) five years.", "o": ["for", "since", "during", "from"], "a": "for", "exp": "期間には for。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-17", "grammar": true, "t": "過去の習慣", "q": "I ( ) play tennis every day.「昔はよくした」", "o": ["used to", "am used to", "use to", "was used"], "a": "used to", "exp": "used to＋原形：昔よく～した。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-18", "grammar": true, "t": "否定", "q": "You ( ) worry.「心配しなくていい」", "o": ["don't have to", "must not", "haven't to", "should not to"], "a": "don't have to", "exp": "don't have to：～する必要がない。must not は禁止。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-19", "grammar": true, "t": "副詞", "q": "He speaks English ( ).", "o": ["fluently", "fluent", "fluency", "more fluent"], "a": "fluently", "exp": "動詞を修飾→副詞 fluently。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-20", "grammar": true, "t": "接続詞", "q": "( ) it was raining, we stayed home.", "o": ["Because", "So", "But", "Though"], "a": "Because", "exp": "理由→ Because。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-21", "grammar": true, "t": "現在進行", "q": "Look! It ( ).", "o": ["is snowing", "snows", "snowed", "snow"], "a": "is snowing", "exp": "今まさに→現在進行形。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-22", "grammar": true, "t": "there構文", "q": "There ( ) three books on the desk.", "o": ["are", "is", "have", "has"], "a": "are", "exp": "複数(three books)→ are。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-23", "grammar": true, "t": "不規則動詞", "q": "I ( ) my keys yesterday.", "o": ["lost", "losed", "lose", "have lost"], "a": "lost", "exp": "yesterday があるので過去形 lost。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-24", "grammar": true, "t": "現在完了", "q": "I've ( ) finished my homework.「もう終えた」", "o": ["already", "yet", "ago", "since"], "a": "already", "exp": "肯定の「もう」→ already。yet は否定・疑問。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-25", "grammar": true, "t": "疑問詞", "q": "( ) have you lived here?「どれくらいの間」", "o": ["How long", "How much", "How many", "How far"], "a": "How long", "exp": "期間をたずねる→ How long。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-26", "grammar": true, "t": "SVOC", "q": "I want you ( ) here.", "o": ["to stay", "stay", "staying", "stayed"], "a": "to stay", "exp": "want＋人＋to do。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-27", "grammar": true, "t": "比較", "q": "She is ( ) as her sister.", "o": ["as tall", "taller", "so tall", "as taller"], "a": "as tall", "exp": "as ～ as の原級比較。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-28", "grammar": true, "t": "命令+付加", "q": "Let's go, ( )?", "o": ["shall we", "will you", "don't we", "shall you"], "a": "shall we", "exp": "Let's ～, shall we?", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-29", "grammar": true, "t": "代名詞", "q": "This bag is ( ).「私のもの」", "o": ["mine", "my", "me", "myself"], "a": "mine", "exp": "所有代名詞 mine。", "lv": "g1", "learned": false, "wrong": false}, {"id": "g1-30", "grammar": true, "t": "接続", "q": "I'll wait ( ) you come back.", "o": ["until", "by", "during", "while until"], "a": "until", "exp": "～まで(ずっと)→ until。", "lv": "g1", "learned": false, "wrong": false}];
+DATA[7]=[{"id": "g2-1", "grammar": true, "t": "仮定法", "q": "If I ( ) you, I would accept the offer.", "o": ["were", "was", "am", "will be"], "a": "were", "exp": "仮定法過去は主語に関わらず were が正式。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-2", "grammar": true, "t": "願望", "q": "I wish I ( ) more free time.", "o": ["had", "have", "will have", "would had"], "a": "had", "exp": "I wish＋仮定法過去(had)：今～ならなあ。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-3", "grammar": true, "t": "完了進行", "q": "I ( ) for two hours.「2時間ずっと待っている」", "o": ["have been waiting", "have waited", "am waiting", "was waiting"], "a": "have been waiting", "exp": "継続の強調→現在完了進行形。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-4", "grammar": true, "t": "分詞構文", "q": "( ) tired, he went to bed early.", "o": ["Being", "Been", "To be", "He being"], "a": "Being", "exp": "分詞構文の主語一致→ Being。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-5", "grammar": true, "t": "関係副詞", "q": "This is the town ( ) I was born.", "o": ["where", "which", "that", "when"], "a": "where", "exp": "場所＋完全文→関係副詞 where。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-6", "grammar": true, "t": "強調構文", "q": "It was John ( ) broke the window.", "o": ["who", "which", "whom", "what"], "a": "who", "exp": "It is 人 that/who ～：強調構文。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-7", "grammar": true, "t": "助動詞相当", "q": "You ( ) leave right now.「すぐ出た方がいい」", "o": ["had better", "had better to", "would better", "better had"], "a": "had better", "exp": "had better＋原形。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-8", "grammar": true, "t": "so~that", "q": "He was ( ) tired that he fell asleep.", "o": ["so", "such", "too", "very"], "a": "so", "exp": "so＋形容詞＋that。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-9", "grammar": true, "t": "such~that", "q": "It was ( ) a good movie that I saw it twice.", "o": ["such", "so", "too", "very"], "a": "such", "exp": "such＋a＋形容詞＋名詞＋that。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-10", "grammar": true, "t": "願望表現", "q": "I ( ) stay home tonight.「むしろ家にいたい」", "o": ["would rather", "would rather to", "had rather to", "rather would"], "a": "would rather", "exp": "would rather＋原形。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-11", "grammar": true, "t": "未来完了", "q": "By 2030, I ( ) here for ten years.", "o": ["will have worked", "will work", "have worked", "will working"], "a": "will have worked", "exp": "未来のある時点までの継続→未来完了。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-12", "grammar": true, "t": "前置詞+関係詞", "q": "The person ( ) I spoke was kind.", "o": ["to whom", "to who", "whom to", "which to"], "a": "to whom", "exp": "前置詞＋whom。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-13", "grammar": true, "t": "名詞節", "q": "I'm not sure ( ) he will come.", "o": ["whether", "that", "what", "which"], "a": "whether", "exp": "「～かどうか」→ whether。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-14", "grammar": true, "t": "複合関係詞", "q": "( ) you decide, I'll support you.", "o": ["Whatever", "However", "Whenever", "Whoever"], "a": "Whatever", "exp": "「何を～しても」→ Whatever。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-15", "grammar": true, "t": "後置修飾", "q": "The girl ( ) over there is my sister.", "o": ["standing", "stood", "stands", "to stand"], "a": "standing", "exp": "現在分詞の後置修飾（立っている女の子）。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-16", "grammar": true, "t": "使役受動", "q": "I had my hair ( ) yesterday.", "o": ["cut", "cutted", "to cut", "cutting"], "a": "cut", "exp": "have＋物＋過去分詞（切ってもらう）。cut は無変化。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-17", "grammar": true, "t": "同意(so)", "q": "She was happy, and ( ).「私も」", "o": ["so was I", "so I was", "I was so", "so did I"], "a": "so was I", "exp": "so＋動詞＋主語（be動詞ならwas）。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-18", "grammar": true, "t": "同意(neither)", "q": "I don't like it, and ( ).", "o": ["neither does he", "neither he does", "so does he", "either does he"], "a": "neither does he", "exp": "否定同意→ neither＋助動詞＋主語。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-19", "grammar": true, "t": "譲歩", "q": "( ) the heavy rain, we went out.", "o": ["Despite", "Although", "Because of", "However"], "a": "Despite", "exp": "despite＋名詞：～にもかかわらず。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-20", "grammar": true, "t": "譲歩", "q": "( ) how hard it is, keep trying.", "o": ["No matter", "Whatever", "Even", "Despite"], "a": "No matter", "exp": "No matter how＋形容詞：どんなに～でも。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-21", "grammar": true, "t": "経験", "q": "I've ( ) been to Paris.「一度もない」", "o": ["never", "ever", "yet", "already"], "a": "never", "exp": "経験の否定→ never。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-22", "grammar": true, "t": "時制の一致", "q": "He said he ( ) tired.", "o": ["was", "is", "will be", "has been"], "a": "was", "exp": "主節が過去→従属節も過去(was)。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-23", "grammar": true, "t": "慣れ", "q": "I'm ( ) waking up early now.「もう慣れた」", "o": ["used to", "use to", "used", "using to"], "a": "used to", "exp": "be used to＋-ing：～に慣れている。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-24", "grammar": true, "t": "as if", "q": "He talks as if he ( ) everything.", "o": ["knew", "knows", "know", "has known"], "a": "knew", "exp": "as if＋仮定法過去(knew)：まるで～かのように。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-25", "grammar": true, "t": "the+比較", "q": "The more you practice, ( ) you become.", "o": ["the better", "better", "the best", "more better"], "a": "the better", "exp": "The 比較級～, the 比較級…。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-26", "grammar": true, "t": "相関接続", "q": "( ) is he smart, but also kind.", "o": ["Not only", "Only not", "Not just also", "Neither"], "a": "Not only", "exp": "Not only A but also B（倒置形）。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-27", "grammar": true, "t": "動詞語法", "q": "It ( ) me an hour to finish it.", "o": ["took", "spent", "cost", "made"], "a": "took", "exp": "It takes 人 時間 to do。過去は took。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-28", "grammar": true, "t": "動名詞", "q": "I suggest ( ) early to avoid traffic.", "o": ["leaving", "to leave", "leave", "left"], "a": "leaving", "exp": "suggest＋動名詞。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-29", "grammar": true, "t": "stop", "q": "He stopped ( ) to answer the phone.「電話に出るために立ち止まった」", "o": ["walking", "to walk", "walk", "walked"], "a": "walking", "exp": "stop＋-ing：～するのをやめる（歩くのをやめて電話に出た）。", "lv": "g2", "learned": false, "wrong": false}, {"id": "g2-30", "grammar": true, "t": "remember", "q": "Please remember ( ) the door.「鍵をかけるのを忘れずに」", "o": ["to lock", "locking", "lock", "locked"], "a": "to lock", "exp": "remember to do：これから～するのを覚えておく。", "lv": "g2", "learned": false, "wrong": false}];
+DATA[8]=[{"id": "g3-1", "grammar": true, "t": "仮定法過去完了", "q": "If I ( ) earlier, I would have caught the train.", "o": ["had left", "left", "have left", "would leave"], "a": "had left", "exp": "過去の反実→ If＋had＋過去分詞。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-2", "grammar": true, "t": "混合仮定法", "q": "If I had studied medicine, I ( ) a doctor now.", "o": ["would be", "would have been", "will be", "were"], "a": "would be", "exp": "過去の条件→現在の結果は would＋原形。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-3", "grammar": true, "t": "倒置(否定)", "q": "Never ( ) such a beautiful sight.", "o": ["have I seen", "I have seen", "I saw", "did I saw"], "a": "have I seen", "exp": "否定語が文頭→倒置（have I seen）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-4", "grammar": true, "t": "倒置(if省略)", "q": "( ) I known, I would have helped you.", "o": ["Had", "If had", "Have", "Did"], "a": "Had", "exp": "If の省略→ Had＋主語（仮定法過去完了）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-5", "grammar": true, "t": "強調のdo", "q": "I ( ) tell you the truth yesterday.「本当に言った」", "o": ["did tell", "did told", "have tell", "do told"], "a": "did tell", "exp": "do＋原形で動詞を強調。過去は did tell。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-6", "grammar": true, "t": "独立分詞構文", "q": "( ) permitting, we'll have a picnic.「天気が良ければ」", "o": ["Weather", "Weather being", "The weather", "If the weather"], "a": "Weather", "exp": "独立分詞構文の慣用句 Weather permitting。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-7", "grammar": true, "t": "部分否定", "q": "Not ( ) students passed the exam.「全員が受かったわけではない」", "o": ["all", "any", "none", "no"], "a": "all", "exp": "not all：全部が～なわけではない（部分否定）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-8", "grammar": true, "t": "慣用", "q": "I can't help ( ) about it.「考えずにはいられない」", "o": ["thinking", "to think", "think", "thought"], "a": "thinking", "exp": "can't help＋-ing：～せずにはいられない。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-9", "grammar": true, "t": "仮定法現在", "q": "The doctor suggested that he ( ) more.", "o": ["rest", "rests", "rested", "resting"], "a": "rest", "exp": "suggest that＋主語＋動詞の原形（提案の that 節）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-10", "grammar": true, "t": "譲歩", "q": "( ) rich he is, he isn't happy.", "o": ["However", "Whatever", "No matter what", "Although"], "a": "However", "exp": "However＋形容詞＋主語＋動詞：どんなに～でも。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-11", "grammar": true, "t": "仮定法(high time)", "q": "It's high time you ( ) to bed.", "o": ["went", "go", "have gone", "going"], "a": "went", "exp": "It's high time＋仮定法過去(went)：もう～する時間だ。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-12", "grammar": true, "t": "助動詞+完了", "q": "You ( ) told me!「言ってくれればよかったのに」", "o": ["should have", "should", "must have", "would"], "a": "should have", "exp": "should have＋過去分詞：～すべきだったのに。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-13", "grammar": true, "t": "助動詞+完了", "q": "She ( ) been hurt in the accident.「怪我をしていたかも」", "o": ["could have", "could", "can have", "must"], "a": "could have", "exp": "could have＋過去分詞：～だったかもしれない。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-14", "grammar": true, "t": "無生物主語", "q": "This road ( ) you to the station.「この道を行けば駅に着く」", "o": ["takes", "goes", "arrives", "leads you go"], "a": "takes", "exp": "take＋人＋to：（道が人を）連れて行く＝行けば着く。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-15", "grammar": true, "t": "強調構文(what)", "q": "( ) I really need is your help.", "o": ["What", "That", "Which", "It"], "a": "What", "exp": "What ～：～するものは（名詞節）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-16", "grammar": true, "t": "目的", "q": "He studied hard ( ) he could pass.", "o": ["so that", "so as", "in order", "such that"], "a": "so that", "exp": "so that＋主語＋can/could：～するために。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-17", "grammar": true, "t": "条件", "q": "You can go out ( ) you finish your homework.", "o": ["provided", "unless", "despite", "although"], "a": "provided", "exp": "provided (that)：～という条件で。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-18", "grammar": true, "t": "倒置(only)", "q": "Only then ( ) the truth.", "o": ["did I realize", "I realized", "I did realize", "realized I"], "a": "did I realize", "exp": "Only＋副詞が文頭→倒置（did I realize）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-19", "grammar": true, "t": "時制", "q": "I didn't know she ( ) come to the party.", "o": ["would", "will", "shall", "is going"], "a": "would", "exp": "過去から見た未来→ would（時制の一致）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-20", "grammar": true, "t": "条件", "q": "( ) you're happy, I'm happy.", "o": ["As long as", "As far", "So long", "While long"], "a": "As long as", "exp": "as long as：～する限り（条件）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-21", "grammar": true, "t": "仮定法(were to)", "q": "( ) she to call, tell her I'm out.", "o": ["Were", "If were", "Was", "Should be"], "a": "Were", "exp": "Were＋主語＋to do：万一～なら（if省略の倒置）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-22", "grammar": true, "t": "独立所有格", "q": "He sat there, his eyes ( ).", "o": ["closed", "closing", "close", "to close"], "a": "closed", "exp": "with 省略の独立分詞：目を閉じて（受動の過去分詞）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-23", "grammar": true, "t": "譲歩(as)", "q": "Tired ( ) he was, he kept working.", "o": ["as", "though as", "as if", "because"], "a": "as", "exp": "形容詞＋as＋主語＋動詞：～ではあるが（譲歩）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-24", "grammar": true, "t": "相関(hardly)", "q": "Hardly had I arrived ( ) it started to rain.", "o": ["when", "than", "then", "that"], "a": "when", "exp": "Hardly ～ when …：～するやいなや…。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-25", "grammar": true, "t": "理由", "q": "The reason I'm late is ( ) I missed the bus.", "o": ["that", "because", "why", "because of"], "a": "that", "exp": "The reason ～ is that …（because は不可）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-26", "grammar": true, "t": "比較の慣用", "q": "I'd rather walk ( ) take a taxi.", "o": ["than", "then", "to", "rather"], "a": "than", "exp": "would rather A than B。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-27", "grammar": true, "t": "相関(no sooner)", "q": "No sooner had he left ( ) she arrived.", "o": ["than", "when", "then", "that"], "a": "than", "exp": "No sooner ～ than …：～するとすぐに…。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-28", "grammar": true, "t": "強調構文(not until)", "q": "It wasn't until noon ( ) he woke up.", "o": ["that", "when", "then", "which"], "a": "that", "exp": "It is not until ～ that …：～して初めて…。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-29", "grammar": true, "t": "否定の慣用", "q": "Little ( ) that he was in danger.「気づいていなかった」", "o": ["did he know", "he knew", "he did know", "knew he"], "a": "did he know", "exp": "否定語 Little が文頭→倒置（did he know）。", "lv": "g3", "learned": false, "wrong": false}, {"id": "g3-30", "grammar": true, "t": "省略", "q": "She can speak French, and he can ( ), too.", "o": ["speak French", "also speak to", "so", "either"], "a": "speak French", "exp": "反復を避けつつ意味を保つ。文末は , too。", "lv": "g3", "learned": false, "wrong": false}];
+
 
 let cur=1;
 function words(){return DATA[cur];}
@@ -715,8 +727,9 @@ function setLevel(n){
   if(n===2)document.body.classList.add('lv2');
   if(n===3)document.body.classList.add('lv3');
   levelBtns.forEach(b=>b.classList.toggle('active',+b.dataset.level===n));
-  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',5:'レベル5：総ふくしゅう！40のミステリーバトル ⭐'}[n];
+  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',5:'レベル5：総ふくしゅう！40のミステリーバトル ⭐',6:'文法1：中級 ― よく使う文法30問 📝',7:'文法2：上級手前 ― 差がつく文法30問 📝',8:'文法3：上級 ― ハイレベル文法30問 📝'}[n];
   if(n===5)shuffle(DATA[5]); // 総復習は毎回ランダム順
+  if(n>=6&&DATA[n])shuffle(DATA[n]);
   switchTab('list');curFilter='all';setActiveChip('all');renderList();
 }
 levelBtns.forEach(b=>b.onclick=()=>{sfx.levelup();setLevel(+b.dataset.level);});
@@ -739,6 +752,20 @@ tabs.forEach(t=>t.addEventListener('click',()=>{
 /* ---- card ---- */
 function makeCard(d){
   const c=document.createElement('div');
+  if(d.grammar){
+    c.className='word-card grammar'+(d.learned?' learned':'');
+    c.innerHTML=`<div class="emoji">📝</div>
+      <div class="wc-body">
+        <div class="wc-top"><span class="badge neutral">${d.t}</span> <span style="font-size:11px;color:var(--muted)">${d.lv.toUpperCase()}</span></div>
+        <div class="wc-ex" style="margin-top:4px">${d.q}</div>
+      </div>
+      <div class="card-actions">
+        <button class="mark${d.learned?' on':''}" disabled>${d.learned?'✓ クリア':'未クリア'}</button>
+        <button class="fight">⚔️ 挑戦</button>
+      </div>`;
+    c.querySelector('.fight').addEventListener('click',e=>{e.stopPropagation();openBattle(d);});
+    return c;
+  }
   if(d.mystery){
     c.className='word-card mystery'+(d.learned?' learned':'');
     c.innerHTML=`<div class="emoji">❓</div>
@@ -823,6 +850,19 @@ function startQuiz(mode='all'){
 }
 function renderQ(){
   const d=qs[qi];
+  if(d&&d.grammar){
+    document.getElementById('qNum').textContent=`Q${qi+1} / ${qs.length}`;
+    document.getElementById('qScore').textContent=`スコア ${score}`;
+    document.getElementById('qBar').style.width=`${(qi/qs.length)*100}%`;
+    document.getElementById('qEmoji').textContent='📝';
+    document.getElementById('qFb').textContent='';document.getElementById('qFb').className='feedback';
+    document.getElementById('qSpeak').classList.add('hidden');
+    document.getElementById('qQ').textContent=d.t;
+    const enEl=document.getElementById('qEn');enEl.innerHTML=d.q;enEl.style.fontSize='16px';
+    const opts=document.getElementById('qOpts');opts.innerHTML='';
+    build(opts,shuffle(d.o.slice()),d.a);
+    return;
+  }
   const r=Math.random();
   const kind = r<0.34 ? 'mean' : (r<0.67 ? 'word' : 'cloze');
   document.getElementById('qNum').textContent=`Q${qi+1} / ${qs.length}`;
@@ -860,6 +900,15 @@ function build(opts,arr,correct){
 }
 function answer(btn,ok,correct,opts){
   const d=qs[qi];
+  if(d.grammar){
+    [...opts.children].forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
+    const fb=document.getElementById('qFb');
+    if(ok){score++;fb.className='feedback ok';fb.innerHTML='せいかい！ 🎉<span class="why">'+d.exp+'</span>';}
+    else{btn.classList.add('wrong');fb.className='feedback ng';d.wrong=true;fb.innerHTML='おしい！正解は緑 🟢<span class="why">'+d.exp+'</span>';}
+    document.getElementById('qScore').textContent=`スコア ${score}`;
+    setTimeout(()=>{qi++;qi<qs.length?renderQ():showResult();},1600);
+    return;
+  }
   const sp=document.getElementById('qSpeak');sp.classList.remove('hidden');sp.onclick=()=>speak(d.w);
   [...opts.children].forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
   const fb=document.getElementById('qFb');
@@ -1164,7 +1213,7 @@ const ENEMY_ROSTER=[
   moves:[{n:'ばくれつじしょ',cat:'物理',pow:78},{n:'オールスペル',cat:'特殊',pow:82},{n:'ちしきのひかり',cat:'特殊',pow:66,eff:{stat:'spa',stage:-1,target:'enemy',chance:0.3}},{n:'まもりのけっかい',cat:'へんか',target:'self',stat:'def',stage:1},{n:'さいごのいちげき',cat:'物理',pow:94,recoil:0.25}]},
 ];
 function enemyFor(){
-  const L=(cur===5)?1:cur; // レベル5(総復習)はレベル1の強さ
+  const L=(cur===5)?1:(cur>=6?cur-5:cur); // レベル5=L1相当、文法6/7/8→L1/2/3
   const boss=Math.random()<(0.08+(L-1)*0.05);
   const pool=ENEMY_ROSTER.filter(e=>!!e.boss===boss);
   const tpl=pool[Math.floor(Math.random()*pool.length)]||ENEMY_ROSTER[0];
@@ -1277,10 +1326,13 @@ function renderMoves(){
   hint.style.cssText='text-align:center;color:rgba(255,255,255,.6);font-size:11px;margin-top:6px;';
   area.appendChild(hint);
 }
+function getGrammarQuestion(d){
+  return {kind:'mc',show:d.q,small:true,html:true,options:shuffle(d.o.slice()),answer:d.a,exp:d.exp,grammar:true};
+}
 function askQuestion(m){
   closeBtPopup();curMove=m;
-  if(mysteryCard)battleWord=rnd(mysteryPool); // ミステリー:今回の出題単語を確定(音声とズレないように)
-  curQ=getQuestion(battleWord);
+  if(mysteryCard)battleWord=rnd(mysteryPool);
+  curQ=(battleWord&&battleWord.grammar)?getGrammarQuestion(battleWord):getQuestion(battleWord);
   document.getElementById('btLog').textContent=`「${m.n}」！ クイズに正解でヒット！`;
   document.getElementById('btFb').textContent='';document.getElementById('btFb').className='bt-fb';
   const area=document.getElementById('btArea');area.innerHTML='';
@@ -1298,6 +1350,7 @@ function askQuestion(m){
 function resolveMC(btn,ok,answer,opts){
   [...opts.children].forEach(b=>{b.disabled=true;if(b.textContent===answer)b.classList.add('correct');});
   if(!ok)btn.classList.add('wrong');
+  if(curQ&&curQ.exp){const fb=document.getElementById('btFb');fb.innerHTML='💡 '+curQ.exp;fb.className='bt-fb '+(ok?'ok':'ng');}
   applyResult(ok);
 }
 function renderSpell(q,area){
@@ -1450,7 +1503,7 @@ function chooseEnemyMove(enemy,target){
 function finishBattle(win){
   document.getElementById('btPlay').classList.add('hidden');
   document.getElementById('btResult').classList.remove('hidden');
-  const rlv=(cur===5)?1:cur;
+  const rlv=(cur===5)?1:(cur>=6?cur-5:cur);
   let reward=win?((enemy&&enemy.boss)?90:(25+rlv*12))+(team.includes('c3')?5:0)+(win&&window.__mobKO?20:0):5;
   window.__mobKO=false;
   if(win){ if(mysteryCard)mysteryCard.learned=true; else battleWord.learned=true; }
@@ -1458,7 +1511,7 @@ function finishBattle(win){
   if(win)sfx.win(); else sfx.lose();
   document.getElementById('btrEmoji').textContent=win?'🏆':'💀';
   document.getElementById('btrTitle').textContent=win?'クリア！':'ゲームオーバー';
-  document.getElementById('btrMsg').innerHTML=win?(mysteryCard?`⭐ ミステリーバトル クリア！ 3つの単語をマスターした！`:`番人「${enemy.name}」をたおした！<b>${battleWord.w}</b> を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
+  document.getElementById('btrMsg').innerHTML=win?(mysteryCard?`⭐ ミステリーバトル クリア！ 3つの単語をマスターした！`:(battleWord&&battleWord.grammar)?`📝 文法問題クリア！ よく出来ました ✓`:`番人「${enemy.name}」をたおした！<b>${battleWord.w}</b> を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
   document.getElementById('btrReward').textContent=`＋${reward} 🪙`;
 }
 document.getElementById('btRetry').onclick=()=>openBattle(battleWord);
@@ -1474,8 +1527,9 @@ function saveState(){
     const learned={},wrong={};
     [DATA[1],DATA[2],DATA[3],DATA[4]].forEach(arr=>arr.forEach(d=>{if(d.learned)learned[d.w]=1;if(d.wrong)wrong[d.w]=1;}));
     const lv5=(DATA[5]||[]).filter(d=>d.learned).length;
+    const gram={learned:[],wrong:[]};[6,7,8].forEach(function(L){(DATA[L]||[]).forEach(function(d){if(d.learned)gram.learned.push(d.id);if(d.wrong)gram.wrong.push(d.id);});});
     localStorage.setItem(SAVE_KEY,JSON.stringify({
-      v:1, coins, team, cur, bgmWanted, lv5,
+      v:1, coins, team, cur, bgmWanted, lv5, gram,
       ownedChars:[...ownedChars],
       owned:{bg:[...owned.bg],frame:[...owned.frame],bbg:[...owned.bbg]},
       equipped:{bg:equipped.bg,frame:equipped.frame,bbg:equipped.bbg},
@@ -1498,6 +1552,7 @@ function loadState(){
     if(d.equipped)['bg','frame','bbg'].forEach(k=>{if(d.equipped[k])equipped[k]=d.equipped[k];});
     [DATA[1],DATA[2],DATA[3],DATA[4]].forEach(arr=>arr.forEach(x=>{x.learned=!!(d.learned&&d.learned[x.w]);x.wrong=!!(d.wrong&&d.wrong[x.w]);}));
     var lv5n=d.lv5||0;(DATA[5]||[]).forEach((x,i)=>{x.learned=i<lv5n;x.wrong=false;});
+    var gl=new Set((d.gram&&d.gram.learned)||[]),gw=new Set((d.gram&&d.gram.wrong)||[]);[6,7,8].forEach(function(L){(DATA[L]||[]).forEach(function(x){x.learned=gl.has(x.id);x.wrong=gw.has(x.id);});});
     if(d.cur&&DATA[d.cur])cur=d.cur;
     return true;
   }catch(e){return false;}
