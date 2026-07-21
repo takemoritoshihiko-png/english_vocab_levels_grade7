@@ -27,6 +27,9 @@
   .sub{color:var(--muted);font-weight:600;font-size:14px;margin-top:2px}
 
   .lvswitch{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+  .modeswitch{display:flex;gap:8px;justify-content:center;margin:14px 0 0}
+  .modebtn{font-family:var(--display);font-weight:700;font-size:15px;border:2px solid #cbd5e1;background:#fff;color:var(--muted);padding:8px 26px;border-radius:30px;cursor:pointer}
+  .modebtn.active{background:var(--ink);border-color:var(--ink);color:#fff}
   .lvbtn{font-family:var(--display);font-weight:600;font-size:15px;border:2px solid #D7E2EC;background:#fff;color:var(--muted);padding:9px 22px;border-radius:30px;cursor:pointer;transition:all .15s}
   .lvbtn[data-level="1"].active{background:var(--lv1);border-color:var(--lv1);color:#fff}
   .lvbtn[data-level="2"].active{background:var(--lv2);border-color:var(--lv2);color:#fff}
@@ -313,12 +316,18 @@
     <button class="sfxbtn off" id="bgmBtn" title="BGM オン/オフ">🎵</button>
   </header>
 
-  <div class="lvswitch">
+  <div class="modeswitch">
+    <button class="modebtn active" data-mode="word" onclick="setMode('word')">📖 単語</button>
+    <button class="modebtn" data-mode="grammar" onclick="setMode('grammar')">📝 文法</button>
+  </div>
+  <div class="lvswitch" id="wordLevels">
     <button class="lvbtn active" data-level="1">レベル1</button>
     <button class="lvbtn" data-level="2">レベル2 🔥</button>
     <button class="lvbtn" data-level="3">レベル3 👑</button>
     <button class="lvbtn" data-level="4">レベル4 🏆</button>
     <button class="lvbtn" data-level="5">レベル5 ⭐総ふくしゅう</button>
+  </div>
+  <div class="lvswitch" id="gramLevels" style="display:none">
     <button class="lvbtn" data-level="6">⏪ 過去形・過去分詞</button>
     <button class="lvbtn" data-level="7">⏳ 現在完了・完了進行</button>
     <button class="lvbtn" data-level="8">⏩ 未来・時制の一致</button>
@@ -747,10 +756,23 @@ function setLevel(n){
   if(n===2)document.body.classList.add('lv2');
   if(n===3)document.body.classList.add('lv3');
   levelBtns.forEach(b=>b.classList.toggle('active',+b.dataset.level===n));
+  var _m=(n>=6)?'grammar':'word';
+  document.querySelectorAll('.modebtn').forEach(b=>b.classList.toggle('active',b.dataset.mode===_m));
+  var wl=document.getElementById('wordLevels'),gl=document.getElementById('gramLevels');
+  if(wl)wl.style.display=(_m==='word')?'flex':'none';
+  if(gl)gl.style.display=(_m==='grammar')?'flex':'none';
   document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',5:'レベル5：総ふくしゅう！40のミステリーバトル ⭐',6:'文法・⏪ 過去形・過去分詞（10問）',7:'文法・⏳ 現在完了・完了進行（10問）',8:'文法・⏩ 未来・時制の一致（10問）',9:'文法・🔑 助動詞（10問）',10:'文法・💭 仮定法・条件文（10問）',11:'文法・🔗 関係詞（10問）',12:'文法・📍 前置詞・冠詞・名詞（10問）',13:'文法・▶️ 不定詞・動名詞・分詞（10問）',14:'文法・🎯 上級構文（倒置・強調ほか）（10問）'}[n];
   if(n===5)shuffle(DATA[5]); // 総復習は毎回ランダム順
   if(n>=6&&DATA[n])shuffle(DATA[n]);
   switchTab('list');curFilter='all';setActiveChip('all');renderList();
+}
+function setMode(m){
+  document.querySelectorAll('.modebtn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
+  document.getElementById('wordLevels').style.display = m==='word'?'flex':'none';
+  document.getElementById('gramLevels').style.display = m==='grammar'?'flex':'none';
+  // モード切替時は各グループの先頭レベルへ
+  if(m==='word'&&cur>=6)setLevel(1);
+  if(m==='grammar'&&cur<6)setLevel(6);
 }
 levelBtns.forEach(b=>b.onclick=()=>{sfx.levelup();setLevel(+b.dataset.level);});
 
