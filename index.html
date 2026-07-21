@@ -66,6 +66,10 @@
   .word-card.grammar{border-left:5px solid #0ea5e9}
   .word-card.grammar .wc-ex{font-weight:700;color:var(--ink);border:none;padding:0}
   .word-card.grammar.learned{opacity:.65}
+  .word-card.boss{background:linear-gradient(135deg,#7c2d12,#b91c1c);color:#fff;border-left:5px solid #fbbf24}
+  .word-card.boss .wc-word{color:#fde68a}
+  .word-card.boss .wc-ex{color:#fee2e2;border:none;padding:0}
+  .word-card.boss.learned{opacity:.7}
   .emoji{font-size:34px;width:42px;text-align:center;flex-shrink:0}
   .wc-body{flex:1;min-width:0}
   .wc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -325,7 +329,6 @@
     <button class="lvbtn" data-level="2">レベル2 🔥</button>
     <button class="lvbtn" data-level="3">レベル3 👑</button>
     <button class="lvbtn" data-level="4">レベル4 🏆</button>
-    <button class="lvbtn" data-level="5">レベル5 ⭐総ふくしゅう</button>
   </div>
   <div class="lvswitch" id="gramLevels" style="display:none">
     <button class="lvbtn" data-level="6">⏪ 過去形・過去分詞</button>
@@ -630,7 +633,6 @@ const DATA={
 Object.values(DATA).forEach(arr=>arr.forEach(d=>{d.learned=false;d.wrong=false;}));
 // レベル5(総復習):全120語の独立コピー。覚えた/復習フラグはL1-4とは別管理
 // レベル5(総復習)=40個のミステリーバトル。1バトルで3単語がランダムに出る。中身は全部?
-DATA[5]=Array.from({length:40},()=>({w:'???',mystery:true,lv:'neutral',e:'❓',ipa:'',mean:'',en:'',ja:'',learned:false,wrong:false}));
 // 文法モード テーマ別9カテゴリ×10問=90問
 DATA[6]=[{"id": "past-1", "grammar": true, "t": "時制変換", "q": "『She writes a letter.』を <b>過去形</b>に。", "o": ["She wrote a letter.", "She writed a letter.", "She was write.", "She has write."], "a": "She wrote a letter.", "exp": "write→wrote(不規則)。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-2", "grammar": true, "t": "過去形", "q": "I ( ) to school yesterday.", "o": ["went", "goed", "go", "have gone"], "a": "went", "exp": "go の過去形は went。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-3", "grammar": true, "t": "不規則", "q": "I ( ) a new book last week.", "o": ["bought", "buyed", "buy", "have buy"], "a": "bought", "exp": "buy→bought。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-4", "grammar": true, "t": "過去分詞", "q": "I have ( ) it before.", "o": ["taken", "took", "take", "taked"], "a": "taken", "exp": "take→took→taken。完了形は過去分詞。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-5", "grammar": true, "t": "過去形", "q": "I ( ) my keys yesterday.", "o": ["lost", "losed", "lose", "have lost"], "a": "lost", "exp": "lose→lost。yesterdayは過去形。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-6", "grammar": true, "t": "be動詞過去", "q": "They ( ) very happy.", "o": ["were", "was", "are", "be"], "a": "were", "exp": "複数主語→ were。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-7", "grammar": true, "t": "過去疑問", "q": "( ) you go there?", "o": ["Did", "Do", "Were", "Was"], "a": "Did", "exp": "一般動詞の過去疑問は Did＋原形。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-8", "grammar": true, "t": "過去否定", "q": "I ( ) go to the party.", "o": ["didn't", "wasn't", "don't", "haven't"], "a": "didn't", "exp": "過去の否定は didn't＋原形。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-9", "grammar": true, "t": "read", "q": "Yesterday I ( ) a book. (発音レッド)", "o": ["read", "readed", "red", "reading"], "a": "read", "exp": "read の過去形は read（発音は red）。", "lv": "past", "learned": false, "wrong": false}, {"id": "past-10", "grammar": true, "t": "過去進行", "q": "I ( ) TV when he called.", "o": ["was watching", "watched", "am watching", "watch"], "a": "was watching", "exp": "過去のある時点で進行中→過去進行形。", "lv": "past", "learned": false, "wrong": false}];
 DATA[7]=[{"id": "perfect-1", "grammar": true, "t": "継続", "q": "I have ( ) here since 2010.", "o": ["lived", "live", "lived in", "living"], "a": "lived", "exp": "since＋現在完了で継続。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-2", "grammar": true, "t": "完了just", "q": "I've ( ) finished my homework.", "o": ["just", "yet", "ago", "since"], "a": "just", "exp": "「ちょうど今」→ just。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-3", "grammar": true, "t": "yet", "q": "Have you eaten ( )?", "o": ["yet", "already", "just", "ever"], "a": "yet", "exp": "疑問文の「もう」→ yet。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-4", "grammar": true, "t": "for", "q": "I've known him ( ) five years.", "o": ["for", "since", "during", "from"], "a": "for", "exp": "期間には for。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-5", "grammar": true, "t": "経験ever", "q": "Have you ( ) been to Paris?", "o": ["ever", "never", "yet", "already"], "a": "ever", "exp": "経験をたずねる→ ever。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-6", "grammar": true, "t": "経験never", "q": "I've ( ) seen such a thing.", "o": ["never", "ever", "yet", "already"], "a": "never", "exp": "経験の否定→ never。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-7", "grammar": true, "t": "gone/been", "q": "He has ( ) to Paris (今いない).", "o": ["gone", "been", "went", "being"], "a": "gone", "exp": "have gone to：行ってしまった(今ここにいない)。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-8", "grammar": true, "t": "完了進行", "q": "I ( ) for two hours.「2時間待っている」", "o": ["have been waiting", "have waited", "am waiting", "waited"], "a": "have been waiting", "exp": "継続の強調→現在完了進行形。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-9", "grammar": true, "t": "完了vs過去", "q": "I ( ) him yesterday.", "o": ["saw", "have seen", "seen", "had seen"], "a": "saw", "exp": "yesterdayがあるので過去形 saw。", "lv": "perfect", "learned": false, "wrong": false}, {"id": "perfect-10", "grammar": true, "t": "How long", "q": "( ) have you lived here?", "o": ["How long", "How much", "How many", "How far"], "a": "How long", "exp": "期間→ How long。", "lv": "perfect", "learned": false, "wrong": false}];
@@ -761,8 +763,7 @@ function setLevel(n){
   var wl=document.getElementById('wordLevels'),gl=document.getElementById('gramLevels');
   if(wl)wl.style.display=(_m==='word')?'flex':'none';
   if(gl)gl.style.display=(_m==='grammar')?'flex':'none';
-  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',5:'レベル5：総ふくしゅう！40のミステリーバトル ⭐',6:'文法・⏪ 過去形・過去分詞（10問）',7:'文法・⏳ 現在完了・完了進行（10問）',8:'文法・⏩ 未来・時制の一致（10問）',9:'文法・🔑 助動詞（10問）',10:'文法・💭 仮定法・条件文（10問）',11:'文法・🔗 関係詞（10問）',12:'文法・📍 前置詞・冠詞・名詞（10問）',13:'文法・▶️ 不定詞・動名詞・分詞（10問）',14:'文法・🎯 上級構文（倒置・強調ほか）（10問）'}[n];
-  if(n===5)shuffle(DATA[5]); // 総復習は毎回ランダム順
+  document.getElementById('sub').textContent = {1:'レベル1：手ごわい30語',2:'レベル2：さらに手ごわい30語 🔥',3:'レベル3：最上級の30語 💎',4:'レベル4：達人級の30語 🏆',6:'文法・⏪ 過去形・過去分詞（10問）',7:'文法・⏳ 現在完了・完了進行（10問）',8:'文法・⏩ 未来・時制の一致（10問）',9:'文法・🔑 助動詞（10問）',10:'文法・💭 仮定法・条件文（10問）',11:'文法・🔗 関係詞（10問）',12:'文法・📍 前置詞・冠詞・名詞（10問）',13:'文法・▶️ 不定詞・動名詞・分詞（10問）',14:'文法・🎯 上級構文（倒置・強調ほか）（10問）'}[n];
   if(n>=6&&DATA[n])shuffle(DATA[n]);
   switchTab('list');curFilter='all';setActiveChip('all');renderList();
 }
@@ -861,6 +862,23 @@ function renderList(){
     return;
   }
   ws.forEach(d=>grid.appendChild(makeCard(d)));
+  if(cur>=1&&cur<=4&&curFilter==='all'){
+    const total0=words().filter(x=>!x.grammar&&!x.mystery).length;
+    const learned0=words().filter(x=>!x.grammar&&!x.mystery&&x.learned).length;
+    const bc=document.createElement('div');
+    bc.className='word-card boss'+(bossCleared['L'+cur]?' learned':'');
+    bc.innerHTML=`<div class="emoji">👑</div>
+      <div class="wc-body">
+        <div class="wc-top"><span class="wc-word">レベル${cur} ボス</span> <span class="badge neutral">総まとめ</span></div>
+        <div class="wc-ex">このレベルの単語がぜんぶ出る まとめボス戦！(${learned0}/${total0} 覚えた)</div>
+      </div>
+      <div class="card-actions">
+        <button class="mark${bossCleared['L'+cur]?' on':''}" disabled>${bossCleared['L'+cur]?'✓ 撃破':'未撃破'}</button>
+        <button class="fight">⚔️ 挑戦</button>
+      </div>`;
+    bc.querySelector('.fight').addEventListener('click',e=>{e.stopPropagation();openBossBattle(cur);});
+    grid.appendChild(bc);
+  }
 }
 document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{curFilter=ch.dataset.f;setActiveChip(ch.dataset.f);renderList();}));
 document.getElementById('unlearnedQuiz').onclick=()=>{
@@ -1002,6 +1020,7 @@ document.getElementById('revClearBtn').onclick=()=>{words().forEach(d=>d.wrong=f
 
 /* ---- coins & shop ---- */
 let coins=0;
+const bossCleared={};
 let bgmWanted=true; // BGMのON/OFF(保存対象)
 function updateCoins(){
   document.getElementById('coinN').textContent=coins;
@@ -1227,7 +1246,7 @@ function renderGacha(){
 document.getElementById('pullBtn').onclick=doPull;
 
 /* ---- battle (ポケモン風) ---- */
-let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null,mysteryCard=null,mysteryPool=[],battleCard=null,battlePool=[];
+let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null,mysteryCard=null,mysteryPool=[],battleCard=null,battlePool=[],bossBattle=false,bossLevel=0;
 function misspell(w,n){
   const out=new Set();let tries=0;
   while(out.size<n&&tries<60){
@@ -1278,12 +1297,13 @@ const ENEMY_ROSTER=[
  {key:'kotodama',name:'ことだまの大王',emoji:'📖',ai:'aggro',boss:true,regen:0,hp:230,atk:74,spa:76,def:72,spe:74,
   moves:[{n:'ばくれつじしょ',cat:'物理',pow:78},{n:'オールスペル',cat:'特殊',pow:82},{n:'ちしきのひかり',cat:'特殊',pow:66,eff:{stat:'spa',stage:-1,target:'enemy',chance:0.3}},{n:'まもりのけっかい',cat:'へんか',target:'self',stat:'def',stage:1},{n:'さいごのいちげき',cat:'物理',pow:94,recoil:0.25}]},
 ];
-function enemyFor(){
-  const L=(cur===5)?1:(cur>=6?2:cur); // レベル5=L1相当、文法テーマは一律L2
-  const boss=Math.random()<(0.08+(L-1)*0.05);
+const NORMAL_MUL={hp:1.2,st:1.12}; // 敵の強さは全レベル一定
+const BOSS_MUL={hp:2.0,st:1.25};
+function enemyFor(forceBoss){
+  const boss=!!forceBoss;
   const pool=ENEMY_ROSTER.filter(e=>!!e.boss===boss);
   const tpl=pool[Math.floor(Math.random()*pool.length)]||ENEMY_ROSTER[0];
-  const m=LVMUL[L]||LVMUL[1];
+  const m=boss?BOSS_MUL:NORMAL_MUL;
   const e={key:tpl.key,name:tpl.name,emoji:tpl.emoji,img:'enemies/'+tpl.key+'.png',boss:!!tpl.boss,ai:tpl.ai,regen:tpl.regen||0,
     maxhp:Math.round(tpl.hp*m.hp),
     atk:Math.round(tpl.atk*m.st),spa:Math.round((tpl.spa!=null?tpl.spa:tpl.atk)*m.st),
@@ -1295,12 +1315,29 @@ function active(){return teamState[activeIdx];}
 function stageMul(s){s=Math.max(-6,Math.min(6,s));return s>=0?(2+s)/2:2/(2-s);}
 function eStat(base,stage){return base*stageMul(stage);}
 function stageText(st){const m={atk:'攻',def:'防',spa:'特',spe:'速'};const parts=Object.keys(m).filter(k=>st[k]).map(k=>`${m[k]}${st[k]>0?'▲':'▼'}${Math.abs(st[k])}`);return parts.join(' ');}
+function openBossBattle(level){
+  if(team.length===0){alert('先に「🎁 ガチャ」タブでチームをえらんでね');switchTab('gacha');renderGacha();return;}
+  const src=(DATA[level]||[]).filter(x=>!x.grammar&&!x.mystery);
+  bossBattle=true; bossLevel=level; mysteryCard=null; battleCard=null;
+  battlePool = src.length? shuffle(src.slice()) : (DATA[level]||[]).slice();
+  battleWord = battlePool[0];
+  enemy=enemyFor(true);
+  teamState=team.map(id=>{const c=getChar(id);return {id,c,hp:c.hp*2,maxhp:c.hp*2,spaMult:1,stages:{atk:0,spa:0,def:0,spe:0}};});
+  activeIdx=0;forgiveLeft=team.includes('c2')?1:0;hintLeft=team.includes('c2')?1:0;
+  if(team.includes('c6'))enemy.stages.atk=-1;
+  document.getElementById('btResult').classList.add('hidden');
+  document.getElementById('btPlay').classList.remove('hidden');
+  document.getElementById('btMon').innerHTML=enemy.img?('<img src="'+enemy.img+'" alt="">'):enemy.emoji;
+  document.getElementById('btMonName').innerHTML='👑 '+enemy.name+'<small>このレベルの総まとめボス！たくさんの問題が出るぞ</small>';
+  const bb=BBGS.find(x=>x.id===equipped.bbg);document.querySelector('.battle').style.background=(bb&&bb.css)?bb.css:'';
+  document.getElementById('battleOverlay').classList.remove('hidden');
+  renderBattle();renderMoves();
+}
 function openBattle(d){
   if(team.length===0){alert('先に「🎁 ガチャ」タブでチームをえらんでね');switchTab('gacha');renderGacha();return;}
-  battleCard=d;
-  if(d&&d.mystery){ mysteryCard=d; battlePool=shuffle(allWords().slice()).slice(0,3); }
-  else if(d&&d.grammar){ mysteryCard=null; battlePool=[d].concat(shuffle((DATA[cur]||[]).filter(x=>x!==d)).slice(0,4)); }
-  else { mysteryCard=null; battlePool=[d]; } // 単語バトルは押した1単語に集中(出題形式だけ毎回変わる)
+  battleCard=d; bossBattle=false;
+  if(d&&d.grammar){ mysteryCard=null; battlePool=[d].concat(shuffle((DATA[cur]||[]).filter(x=>x!==d&&x.grammar)).slice(0,4)); }
+  else { mysteryCard=null; var _wp=((DATA[cur]||[]).filter(x=>x!==d&&!x.grammar&&!x.mystery)); battlePool=[d].concat(shuffle(_wp).slice(0,2)); } // 1モンスター=3単語
   battleWord=d;
   enemy=enemyFor();
   teamState=team.map(id=>{const c=getChar(id);return {id,c,hp:c.hp*2,maxhp:c.hp*2,spaMult:1,stages:{atk:0,spa:0,def:0,spe:0}};});
@@ -1573,15 +1610,25 @@ function chooseEnemyMove(enemy,target){
 function finishBattle(win){
   document.getElementById('btPlay').classList.add('hidden');
   document.getElementById('btResult').classList.remove('hidden');
-  const rlv=(cur===5)?1:(cur>=6?2:cur);
-  let reward=win?((enemy&&enemy.boss)?90:(25+rlv*12))+(team.includes('c3')?5:0)+(win&&window.__mobKO?20:0):5;
+  const wasCleared=!!(battleCard&&battleCard.learned);
+  let base;
+  if(!win) base=5;
+  else if(bossBattle) base=120;
+  else if(wasCleared) base=10;       // 一度クリアした単語/文法の再戦
+  else base=30;                      // 初クリア(敵の強さ一定なので固定)
+  let reward=base+(win?((team.includes('c3')?5:0)+(window.__mobKO?20:0)):0);
   window.__mobKO=false;
-  if(win){ if(battleCard)battleCard.learned=true; }
+  if(win){
+    if(bossBattle){ bossCleared['L'+bossLevel]=true; }
+    else if(battleCard&&battleCard.grammar){ battleCard.learned=true; }
+    else if(!battleCard){ /* nothing */ }
+    else { battlePool.forEach(function(w){ if(w&&!w.grammar&&!w.mystery)w.learned=true; }); } // 1モンスター=3単語ぶん覚えた
+  }
   coins+=reward;updateCoins();
   if(win)sfx.win(); else sfx.lose();
   document.getElementById('btrEmoji').textContent=win?'🏆':'💀';
   document.getElementById('btrTitle').textContent=win?'クリア！':'ゲームオーバー';
-  document.getElementById('btrMsg').innerHTML=win?(mysteryCard?`⭐ ミステリーバトル クリア！ いろんな単語が出たね！`:(battleCard&&battleCard.grammar)?`📝 文法クリア！ いろんな問題が出たね ✓`:`番人「${enemy.name}」をたおした！<b>${battleCard.w}</b> を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
+  document.getElementById('btrMsg').innerHTML=win?(bossBattle?`👑 レベル${bossLevel} ボス撃破！ このレベルを制覇したね！`:(battleCard&&battleCard.grammar)?`📝 文法クリア！ ✓`:`番人「${enemy.name}」をたおした！ 3つの単語を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
   document.getElementById('btrReward').textContent=`＋${reward} 🪙`;
 }
 document.getElementById('btRetry').onclick=()=>openBattle(battleWord);
@@ -1596,10 +1643,9 @@ function saveState(){
   try{
     const learned={},wrong={};
     [DATA[1],DATA[2],DATA[3],DATA[4]].forEach(arr=>arr.forEach(d=>{if(d.learned)learned[d.w]=1;if(d.wrong)wrong[d.w]=1;}));
-    const lv5=(DATA[5]||[]).filter(d=>d.learned).length;
     const gram={learned:[],wrong:[]};[6,7,8,9,10,11,12,13,14].forEach(function(L){(DATA[L]||[]).forEach(function(d){if(d.learned)gram.learned.push(d.id);if(d.wrong)gram.wrong.push(d.id);});});
     localStorage.setItem(SAVE_KEY,JSON.stringify({
-      v:1, coins, team, cur, bgmWanted, lv5, gram,
+      v:1, coins, team, cur, bgmWanted, gram, bossCleared:Object.assign({},bossCleared),
       ownedChars:[...ownedChars],
       owned:{bg:[...owned.bg],frame:[...owned.frame],bbg:[...owned.bbg]},
       equipped:{bg:equipped.bg,frame:equipped.frame,bbg:equipped.bbg},
@@ -1621,7 +1667,7 @@ function loadState(){
     if(d.owned)['bg','frame','bbg'].forEach(k=>{owned[k].clear();owned[k].add('default');(d.owned[k]||[]).forEach(x=>owned[k].add(x));});
     if(d.equipped)['bg','frame','bbg'].forEach(k=>{if(d.equipped[k])equipped[k]=d.equipped[k];});
     [DATA[1],DATA[2],DATA[3],DATA[4]].forEach(arr=>arr.forEach(x=>{x.learned=!!(d.learned&&d.learned[x.w]);x.wrong=!!(d.wrong&&d.wrong[x.w]);}));
-    var lv5n=d.lv5||0;(DATA[5]||[]).forEach((x,i)=>{x.learned=i<lv5n;x.wrong=false;});
+    if(d.bossCleared){Object.keys(bossCleared).forEach(k=>delete bossCleared[k]);Object.assign(bossCleared,d.bossCleared);}
     var gl=new Set((d.gram&&d.gram.learned)||[]),gw=new Set((d.gram&&d.gram.wrong)||[]);[6,7,8,9,10,11,12,13,14].forEach(function(L){(DATA[L]||[]).forEach(function(x){x.learned=gl.has(x.id);x.wrong=gw.has(x.id);});});
     if(d.cur&&DATA[d.cur])cur=d.cur;
     return true;
