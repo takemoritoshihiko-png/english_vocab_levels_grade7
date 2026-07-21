@@ -1161,7 +1161,7 @@ function renderGacha(){
 document.getElementById('pullBtn').onclick=doPull;
 
 /* ---- battle (ポケモン風) ---- */
-let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null,mysteryCard=null,mysteryPool=[];
+let battleWord=null,enemy=null,teamState=[],activeIdx=0,spellBuilt=[],spellDone=false,forgiveLeft=0,hintLeft=0,curMove=null,curQ=null,fxInfo=null,mysteryCard=null,mysteryPool=[],battleCard=null,battlePool=[];
 function misspell(w,n){
   const out=new Set();let tries=0;
   while(out.size<n&&tries<60){
@@ -1231,8 +1231,11 @@ function eStat(base,stage){return base*stageMul(stage);}
 function stageText(st){const m={atk:'攻',def:'防',spa:'特',spe:'速'};const parts=Object.keys(m).filter(k=>st[k]).map(k=>`${m[k]}${st[k]>0?'▲':'▼'}${Math.abs(st[k])}`);return parts.join(' ');}
 function openBattle(d){
   if(team.length===0){alert('先に「🎁 ガチャ」タブでチームをえらんでね');switchTab('gacha');renderGacha();return;}
-  if(d&&d.mystery){mysteryCard=d;mysteryPool=shuffle(allWords().slice()).slice(0,3);battleWord=mysteryPool[0];}
-  else{mysteryCard=null;mysteryPool=[];battleWord=d;}
+  battleCard=d;
+  if(d&&d.mystery){ mysteryCard=d; battlePool=shuffle(allWords().slice()).slice(0,3); }
+  else if(d&&d.grammar){ mysteryCard=null; battlePool=[d].concat(shuffle((DATA[cur]||[]).filter(x=>x!==d)).slice(0,4)); }
+  else { mysteryCard=null; var _wp=((typeof words==='function'?words():[])||[]).filter(x=>x!==d&&!x.mystery&&!x.grammar); battlePool=[d].concat(shuffle(_wp).slice(0,4)); }
+  battleWord=d;
   enemy=enemyFor();
   teamState=team.map(id=>{const c=getChar(id);return {id,c,hp:c.hp*2,maxhp:c.hp*2,spaMult:1,stages:{atk:0,spa:0,def:0,spe:0}};});
   activeIdx=0;
@@ -1331,8 +1334,9 @@ function getGrammarQuestion(d){
 }
 function askQuestion(m){
   closeBtPopup();curMove=m;
-  if(mysteryCard)battleWord=rnd(mysteryPool);
-  curQ=(battleWord&&battleWord.grammar)?getGrammarQuestion(battleWord):getQuestion(battleWord);
+  var _it=(battlePool&&battlePool.length)?rnd(battlePool):battleWord;
+  battleWord=_it; // リスニング音声を出題と一致させる
+  curQ=(_it&&_it.grammar)?getGrammarQuestion(_it):getQuestion(_it);
   document.getElementById('btLog').textContent=`「${m.n}」！ クイズに正解でヒット！`;
   document.getElementById('btFb').textContent='';document.getElementById('btFb').className='bt-fb';
   const area=document.getElementById('btArea');area.innerHTML='';
@@ -1506,12 +1510,12 @@ function finishBattle(win){
   const rlv=(cur===5)?1:(cur>=6?cur-5:cur);
   let reward=win?((enemy&&enemy.boss)?90:(25+rlv*12))+(team.includes('c3')?5:0)+(win&&window.__mobKO?20:0):5;
   window.__mobKO=false;
-  if(win){ if(mysteryCard)mysteryCard.learned=true; else battleWord.learned=true; }
+  if(win){ if(battleCard)battleCard.learned=true; }
   coins+=reward;updateCoins();
   if(win)sfx.win(); else sfx.lose();
   document.getElementById('btrEmoji').textContent=win?'🏆':'💀';
   document.getElementById('btrTitle').textContent=win?'クリア！':'ゲームオーバー';
-  document.getElementById('btrMsg').innerHTML=win?(mysteryCard?`⭐ ミステリーバトル クリア！ 3つの単語をマスターした！`:(battleWord&&battleWord.grammar)?`📝 文法問題クリア！ よく出来ました ✓`:`番人「${enemy.name}」をたおした！<b>${battleWord.w}</b> を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
+  document.getElementById('btrMsg').innerHTML=win?(mysteryCard?`⭐ ミステリーバトル クリア！ いろんな単語が出たね！`:(battleCard&&battleCard.grammar)?`📝 文法クリア！ いろんな問題が出たね ✓`:`番人「${enemy.name}」をたおした！<b>${battleCard.w}</b> を「覚えた」にしたよ ✓`)+((enemy&&enemy.boss)?'<br>👑 ボス撃破ボーナス！':''):'味方が全員たおれた… もう一回！';
   document.getElementById('btrReward').textContent=`＋${reward} 🪙`;
 }
 document.getElementById('btRetry').onclick=()=>openBattle(battleWord);
