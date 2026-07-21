@@ -1266,7 +1266,7 @@ function openBattle(d){
   battleCard=d;
   if(d&&d.mystery){ mysteryCard=d; battlePool=shuffle(allWords().slice()).slice(0,3); }
   else if(d&&d.grammar){ mysteryCard=null; battlePool=[d].concat(shuffle((DATA[cur]||[]).filter(x=>x!==d)).slice(0,4)); }
-  else { mysteryCard=null; var _wp=((typeof words==='function'?words():[])||[]).filter(x=>x!==d&&!x.mystery&&!x.grammar); battlePool=[d].concat(shuffle(_wp).slice(0,4)); }
+  else { mysteryCard=null; battlePool=[d]; } // 単語バトルは押した1単語に集中(出題形式だけ毎回変わる)
   battleWord=d;
   enemy=enemyFor();
   teamState=team.map(id=>{const c=getChar(id);return {id,c,hp:c.hp*2,maxhp:c.hp*2,spaMult:1,stages:{atk:0,spa:0,def:0,spe:0}};});
