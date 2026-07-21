@@ -375,6 +375,7 @@
   <section id="gacha" class="hidden">
     <div class="gacha-top">
       <button class="gacha-btn" id="pullBtn">🎁 ガチャを引く</button>
+      <button class="gacha-btn" id="itrBtn" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);margin-top:8px" onclick="openInterrogate()">🔍 取り調べ（英語の豆知識）</button>
       <div class="gacha-cost" id="gachaCost"></div>
       <div id="pullResult"></div>
     </div>
@@ -384,6 +385,13 @@
     <div class="shop-h" style="margin-top:16px">🎁 もってるキャラ</div>
     <div class="char-grid" id="charGrid"></div>
   </section>
+
+  <div id="itrOverlay" class="overlay hidden">
+    <div class="battle" style="max-width:520px">
+      <div class="bt-top"><span class="ttl">🔍 取り調べ</span><button class="bt-close" onclick="document.getElementById('itrOverlay').classList.add('hidden')">✕</button></div>
+      <div id="itrBody"></div>
+    </div>
+  </div>
 
   <div id="battleOverlay" class="overlay hidden">
     <div class="battle">
@@ -1085,9 +1093,33 @@ const CHARS=[
 const ownedChars=new Set(['c20']);
 let team=['c20'];
 const GACHA_COST=300;
+const TRIVIA=[["borrow と lend", "borrow=借りる(自分の所へ)、lend=貸す。文具を借りたいときは Can I borrow your pen? が自然。"], ["hear と listen", "hear=自然に聞こえる、listen=意識して聞く。I'm listening to music / I hear a noise."], ["see・look・watch", "see=見える、look=視線を向ける、watch=動くものをじっと見る。Watch TV, look at this, I see."], ["tell は tell+人", "「〜に言う」は tell me / tell him。talk to、speak English、say something と使い分ける。"], ["fun と funny", "fun=楽しい、funny=面白い(笑える)。It was fun! と It was funny! は意味が違う。"], ["actually が超便利", "actually=「実は・えっと」。訂正や会話のつなぎに毎日使う。Actually, I think…"], ["kind of / sort of", "「なんか・ちょっと」とぼかせる。It's kind of cold. 会話でめちゃ使う。"], ["I'm good で丁寧に断る", "「大丈夫です、結構です」。おかわり要る? に No, I'm good. と返せる。"], ["No worries", "「気にしないで・大丈夫」。お礼やちょっとした謝罪への軽い返し。"], ["almost の使い方", "almost=もう少しで。I almost fell.=転びそうになった。almost all=ほとんど全部。"], ["How's it going?", "「調子どう?」の定番あいさつ。返しは Good, you? でOK。"], ["What's up? は軽い挨拶", "深刻な意味じゃない。返しは Not much.(特にないよ) が定番。"], ["Take care", "別れ際の「気をつけてね・お大事に」。See you の後に添えると自然。"], ["I mean で言い直す", "「つまり・いや」。言い直しや補足に超頻出。I mean, it's fine."], ["used to と be used to", "used to+原形=昔よく〜した。be used to+-ing=〜に慣れている。全くの別物!"], ["gonna / wanna / gotta", "会話では going to→gonna、want to→wanna、have got to→gotta。リスニングで重要。"], ["I'd like … で丁寧に", "would like=「〜が欲しい」。I'd like a coffee. は want より上品。"], ["Could you …? は丁寧", "Can you より丁寧な依頼。Could you help me? で好印象。"], ["Would you mind …ing?", "超丁寧な依頼。答えのYesは「嫌です」なので、OKなら No, not at all."], ["a couple of", "「2〜3個くらい」。a couple of days=2、3日。ざっくり少数。"], ["few と a few は逆", "a few=少しある、few=ほとんどない。a を付けるかで意味が反転する。"], ["a little と a few", "a little=少し(不可算:water)、a few=少し(可算:apples)。"], ["in / on / at の時間", "時刻=at 3pm、曜日=on Monday、月・年=in July。基本の3つ。"], ["arrive at と in", "arrive at=場所(駅)、arrive in=広い場所(国・都市)。to は付けない。"], ["決まった前置詞", "good at、interested in、afraid of、depend on はセットで覚える。"], ["by と until", "by=期限(〜までに)、until=継続の終点(〜までずっと)。by 5pm と until 5pm は別。"], ["for と since", "for=期間(for 5 years)、since=起点(since 2010)。完了形とよく使う。"], ["news は不可算", "a news ✗。good news が正しい。sがつかない名詞に注意。"], ["information も不可算", "informations ✗。some information が正しい。advice も同じ。"], ["every day と everyday", "every day=毎日(副詞)、everyday=日常の(形容詞)。everyday life。"], ["people は複数扱い", "people are … が正しい。1人は person、2人以上は people。"], ["look forward to +-ing", "toの後は動名詞!I'm looking forward to seeing you.(会えるのが楽しみ)"], ["Thanks for +-ing", "Thanks for coming.(来てくれてありがとう) forの後は-ing。"], ["different from", "「〜と違う」は different from が基本。"], ["the same as", "「〜と同じ」は the same as。The same as before."], ["It depends", "「場合による」。答えづらい質問への万能フレーズ。"], ["That makes sense", "「なるほど、筋が通ってる」。相手の説明に納得したとき。"], ["I have no idea", "「全く分からない」。I don't know より強い。"], ["Never mind", "「気にしないで・なんでもない」。言いかけてやめる時にも。"], ["It's up to you", "「あなた次第・お任せ」。どこ食べる? の返しに便利。"], ["Give me a second", "「ちょっと待って」。a secはほんの少しの意味。Hold on. も同じ。"], ["just in case", "「念のため」。Take an umbrella just in case."], ["by the way", "「ところで」。話題を変えるときの定番。略してBTW。"], ["to be honest", "「正直言うと」。To be honest, I don't like it. 前置きに便利。"], ["as far as I know", "「私の知る限り」。断定を避けたい時に。略してAFAIK。"], ["I'm not sure", "「よく分からない・確信がない」。やわらかい否定に使える。"], ["Sounds good / like a plan", "「いいね・それでいこう」。提案への軽い同意。"], ["Let's call it a day", "「今日はここまでにしよう」。仕事や作業の切り上げに。"], ["water は「ワラー」", "アメリカ英語では t が d っぽくなる。better も「ベラー」。"], ["リンキング(音の連結)", "an apple は「アナポー」のように繋がる。単語ごとに切れない。"], ["-ed の3つの発音", "worked=t、played=d、wanted=id。動詞で変わる。"], ["th の音", "舌先を軽く歯に当てる。think の th と this の th は無声/有声で別。"], ["弱く読む単語がある", "a, to, of, and などは弱く速く。強く読むのは内容語(名詞・動詞)。"], ["Can't wait!", "カジュアルに「楽しみで待てない」。I can't wait to see you!"], ["How do you do は古い", "今の初対面は Nice to meet you. が普通。"], ["excuse me と sorry", "excuse me=前を通る・呼びかけ、sorry=謝罪。混同しやすい。"], ["restroom がトイレ", "公共の場では restroom / bathroom。toilet は便器そのものを指す。"], ["cheap の裏の意味", "cheap は「安い」だが「安っぽい」の悪い意味も。inexpensive が無難。"], ["skinny は痩せすぎ", "褒めるなら slim / slender。skinny は骨っぽい、fat は失礼。"], ["house と home", "house=建物、home=家庭・自分の居場所。Welcome home!(おかえり)"], ["trip と travel", "trip=旅行(数えられる)、travel=旅すること(動詞・不可算)。a trip。"], ["must と have to", "must=自分の確信・強い義務、have to=外的な義務。否定は意味が全然違う。"], ["mustn't と don't have to", "mustn't=してはいけない(禁止)、don't have to=しなくていい。真逆!"], ["some と any", "肯定文=some、否定・疑問=any。ただし勧誘は Would you like some…?"], ["How much と How many", "much=不可算(water)、many=可算(books)。How much is it?(いくら?)"], ["Can I get …? で注文", "カフェで Can I get a latte? が自然。I want は少しきつい。"], ["to go / for here", "持ち帰りは to go(米)/take away(英)、店内は for here。"], ["small talk", "天気や週末の話など軽い雑談。Nice weather, isn't it? が定番の入り。"], ["Long time no see", "「久しぶり!」そのまま使える決まり文句。"], ["Bless you", "誰かがくしゃみをしたら言う。返しは Thank you."], ["Cheers", "乾杯だけでなく、イギリスでは「ありがとう」の軽い意味でも使う。"], ["please の位置", "Could you help me, please? 依頼の最後に付けると丁寧。"], ["first name で呼ぶ", "英語圏では下の名前で呼び合うのが普通。親しみの表れ。"], ["Mr. / Ms. の使い方", "Mr.+苗字、Ms.+苗字(女性は既婚未婚問わずMs.が無難)。名前には付けない。"], ["How are you? は挨拶", "本気の体調確認ではない。I'm good, thanks. And you? で返す。"], ["Not bad", "「まあまあ・悪くない」。How are you? への自然な返し。"], ["You too の便利さ", "Have a nice day! → You too!(あなたも) で返せる。"], ["Same here", "「私も同じ」。Me too とほぼ同じで自然。"], ["Go ahead", "「どうぞ(お先に)」。順番を譲る・許可する時。"], ["After you", "「お先にどうぞ」。ドアなどで相手に譲る上品な一言。"], ["メール:I'm writing to…", "用件を伝える書き出し。I'm writing to ask about…"], ["Please find attached", "「〜を添付します」。ビジネスメールの定番。"], ["Looking forward to hearing…", "「ご返信お待ちしています」。メールの結び。"], ["Best regards,", "メールの結びの定番。カジュアルは Best, / Thanks,"], ["I'd appreciate it if…", "「〜していただけると助かります」。丁寧な依頼。"], ["Let me know", "「知らせてね」。Let me know if you have questions. 超頻出。"], ["ASAP / FYI", "ASAP=できるだけ早く、FYI=ご参考まで。メールで頻出の略語。"], ["日付の順番が違う", "米=月/日/年、英=日/月/年。7/4 は米では7月4日。"], ["時刻の言い方", "half past three=3時半、quarter to four=3時45分。"], ["noon と midnight", "noon=正午(12pm)、midnight=真夜中(12am)。a.m./p.m.は12時間制。"], ["明後日・一昨日", "the day after tomorrow=明後日、the day before yesterday=一昨日。"], ["序数のスペル", "1st, 2nd, 3rd, 4th…。日付や順位で使う。"], ["dozen は12", "a dozen eggs=卵12個。half a dozen=6個。"], ["大きな数", "thousand=千、million=百万、billion=十億、trillion=兆。"], ["温度の単位", "米は℉(華氏)、他の多くは℃(摂氏)。70°Fは約21℃。"], ["get の万能さ", "get=手に入れる/着く/なる/理解する。I get it!(分かった)"], ["make it の意味", "make it=間に合う・成功する・都合がつく。I can make it.(行けるよ)"], ["take a look", "「ちょっと見る」。Take a look at this. look より柔らかい。"], ["would rather", "「むしろ〜したい」。I'd rather stay home. than で比較も。"], ["It's worth it", "「その価値がある」。worth+-ing で worth trying(試す価値あり)。"]];
 function getChar(id){return CHARS.find(c=>c.id===id);}
 function formStat(b,key){const c=b.c;if(c&&c.forms&&c.form2&&b.hp<b.maxhp/2&&c.form2[key]!=null)return c.form2[key];return c[key];}
 function avatarHTML(c,cls){return c.img?`<div class="${cls}" style="background-image:url('${c.img}')"></div>`:`<div class="${cls}" style="background:#8B5CF6">${c.emoji}</div>`;}
+function charTrivia(id){const i=CHARS.findIndex(c=>c.id===id);return TRIVIA.slice(i*5,i*5+5);}
+function openInterrogate(){
+  const owned=CHARS.filter(c=>ownedChars.has(c.id));
+  let h='<p class="shop-note" style="text-align:center">話を聞きたいキャラをえらぼう！ 一人ずつ 英語の豆知識を5つ教えてくれるよ 📚</p><div class="char-grid">';
+  owned.forEach(c=>{ h+=`<div class="char" onclick="talkTo('${c.id}')" style="cursor:pointer">${avatarHTML(c,'av')}<div class="cn">${c.name}</div><div class="cstats">🔍 話を聞く</div></div>`; });
+  h+='</div>';
+  document.getElementById('itrBody').innerHTML=h;
+  document.getElementById('itrOverlay').classList.remove('hidden');
+}
+let itrId=null,itrStep=0;
+function talkTo(id){ itrId=id; itrStep=0; renderTalk(); }
+function renderTalk(){
+  const c=getChar(itrId), tips=charTrivia(itrId);
+  const shown=tips.slice(0,itrStep+1);
+  let bubbles=shown.map((t,i)=>`<div style="background:rgba(255,255,255,.14);border-radius:14px;padding:11px 13px;margin:8px 0"><div style="font-weight:800;color:#ffd23f;font-size:14px;margin-bottom:3px">${i+1}. ${t[0]}</div><div style="font-size:13px;line-height:1.7">${t[1]}</div></div>`).join('');
+  const last=itrStep>=tips.length-1;
+  let h=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">${avatarHTML(c,'avatar-lg')}<div><div class="you-name">${c.name}</div><div style="font-size:12px;color:rgba(255,255,255,.7)">英語の豆知識 (${itrStep+1}/${tips.length})</div></div></div>${bubbles}`;
+  h+=`<div style="display:flex;gap:8px;margin-top:12px">`;
+  if(!last) h+=`<button style="flex:1;border:none;border-radius:12px;padding:11px;font-weight:800;color:#fff;background:linear-gradient(90deg,#0ea5e9,#6366f1);cursor:pointer" onclick="itrStep++;renderTalk()">▶ 次のはなし</button>`;
+  h+=`<button style="flex:1;border:none;border-radius:12px;padding:11px;font-weight:800;cursor:pointer;background:rgba(255,255,255,.16);color:#fff" onclick="openInterrogate()">← もどる</button>`;
+  h+=`</div>`;
+  document.getElementById('itrBody').innerHTML=h;
+}
 function doPull(){
   if(coins<GACHA_COST){alert('コインが足りないよ（300コイン必要）。クイズやバトルで貯めよう！');return;}
   const pool=CHARS.filter(c=>!ownedChars.has(c.id));
