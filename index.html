@@ -1278,7 +1278,9 @@ function renderMoves(){
   area.appendChild(hint);
 }
 function askQuestion(m){
-  closeBtPopup();curMove=m;curQ=getQuestion(mysteryCard?rnd(mysteryPool):battleWord);
+  closeBtPopup();curMove=m;
+  if(mysteryCard)battleWord=rnd(mysteryPool); // ミステリー:今回の出題単語を確定(音声とズレないように)
+  curQ=getQuestion(battleWord);
   document.getElementById('btLog').textContent=`「${m.n}」！ クイズに正解でヒット！`;
   document.getElementById('btFb').textContent='';document.getElementById('btFb').className='bt-fb';
   const area=document.getElementById('btArea');area.innerHTML='';
